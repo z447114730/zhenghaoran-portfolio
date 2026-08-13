@@ -1,0 +1,2222 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <title>郑浩然 — 个人作品集</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --purple: #cb8dff;
+      --purple-hover: #d9a8ff;
+      --success: #059669;
+      --white: #fff;
+      --muted: rgba(255, 255, 255, 0.64);
+      --glass: rgba(255, 255, 255, 0.16);
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #303030 #000;
+    }
+
+    body {
+      min-height: 500vh;
+      margin: 0;
+      overflow-x: hidden;
+      background: #000;
+      color: var(--white);
+      font-family: "Space Grotesk", sans-serif;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    body::-webkit-scrollbar {
+      width: 7px;
+    }
+
+    body::-webkit-scrollbar-track {
+      background: #000;
+    }
+
+    body::-webkit-scrollbar-thumb {
+      border: 2px solid #000;
+      border-radius: 999px;
+      background: #303030;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      color: inherit;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .stage {
+      position: fixed;
+      z-index: 0;
+      inset: 0;
+      overflow: hidden;
+      background: #000;
+      isolation: isolate;
+    }
+
+    #frame-canvas {
+      position: absolute;
+      z-index: 0;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+    }
+
+    .cinematic-shade {
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      display: none;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 67% 42%, transparent 0, rgba(0, 0, 0, 0.05) 28%, rgba(0, 0, 0, 0.44) 82%),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.67) 0%, rgba(0, 0, 0, 0.08) 50%, rgba(0, 0, 0, 0.28) 100%),
+        linear-gradient(180deg, rgba(0, 0, 0, 0.22), transparent 35%, rgba(0, 0, 0, 0.4));
+    }
+
+    .cinematic-shade::after {
+      position: absolute;
+      inset: 0;
+      content: "";
+      opacity: 0.24;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.018) 0 1px, transparent 1px 3px),
+        radial-gradient(circle at 18% 15%, rgba(203, 141, 255, 0.13), transparent 26%);
+      mix-blend-mode: screen;
+    }
+
+    .brand {
+      position: absolute;
+      z-index: 12;
+      top: 34px;
+      left: 42px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transform-origin: left center;
+      will-change: opacity, transform, filter;
+    }
+
+    .brand-mark {
+      width: 31px;
+      height: 31px;
+      flex: 0 0 auto;
+    }
+
+    .brand-name {
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: -0.04em;
+    }
+
+    .hero {
+      position: absolute;
+      z-index: 10;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .hero-card {
+      position: absolute;
+      bottom: 42px;
+      left: 42px;
+      width: min(850px, calc(100vw - 84px));
+      min-height: 390px;
+      padding: 42px 144px 42px 42px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.46);
+      border-radius: 0;
+      background: var(--glass);
+      box-shadow: 0 32px 110px rgba(0, 0, 0, 0.62), inset 0 1px rgba(255, 255, 255, 0.16);
+      -webkit-backdrop-filter: blur(80px);
+      backdrop-filter: blur(80px);
+      pointer-events: auto;
+      will-change: opacity, transform, filter;
+    }
+
+    .hero-card::before,
+    .feature-card::before {
+      position: absolute;
+      inset: 0;
+      content: "";
+      pointer-events: none;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.14), transparent 36%, rgba(203, 141, 255, 0.06));
+    }
+
+    .hero-title {
+      position: relative;
+      max-width: 660px;
+      margin: 0;
+      font-family: "Instrument Serif", serif;
+      font-size: clamp(56px, 5.1vw, 72px);
+      font-weight: 400;
+      line-height: 0.94;
+      letter-spacing: -0.035em;
+    }
+
+    .hero-title em {
+      font-weight: 400;
+    }
+
+    .hero-copy {
+      position: relative;
+      max-width: 620px;
+      margin: 33px 0 0;
+      color: rgba(255, 255, 255, 0.78);
+      font-family: "Manrope", sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 1.65;
+      letter-spacing: 0.015em;
+      text-transform: uppercase;
+    }
+
+    .hero-cta {
+      position: absolute;
+      right: 36px;
+      bottom: 36px;
+      display: grid;
+      width: 84px;
+      height: 84px;
+      padding: 0;
+      border: 0;
+      border-radius: 50%;
+      place-items: center;
+      background: var(--purple);
+      box-shadow: 0 18px 44px rgba(131, 61, 182, 0.38);
+      cursor: pointer;
+      transition: transform 260ms ease, background-color 260ms ease, box-shadow 260ms ease;
+    }
+
+    .hero-cta:hover,
+    .hero-cta:focus-visible {
+      outline: none;
+      background: var(--purple-hover);
+      box-shadow: 0 22px 56px rgba(176, 94, 235, 0.48);
+      transform: scale(1.07);
+    }
+
+    .hero-cta svg {
+      width: 31px;
+      height: 31px;
+      transition: transform 260ms ease;
+    }
+
+    .hero-cta:hover svg {
+      transform: translateX(3px);
+    }
+
+    .features {
+      position: absolute;
+      z-index: 9;
+      inset: 0;
+      display: grid;
+      padding: 92px 24px 32px;
+      place-items: center;
+      pointer-events: none;
+    }
+
+    .feature-grid {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .feature-card {
+      position: relative;
+      display: flex;
+      width: 280px;
+      height: 440px;
+      padding: 28px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.44);
+      border-radius: 0;
+      flex-direction: column;
+      background: rgba(255, 255, 255, 0.14);
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.48), inset 0 1px rgba(255, 255, 255, 0.12);
+      -webkit-backdrop-filter: blur(80px);
+      backdrop-filter: blur(80px);
+      cursor: pointer;
+      will-change: opacity, transform, filter;
+      transition: border-color 220ms ease, background-color 220ms ease, box-shadow 220ms ease;
+    }
+
+    .feature-card:hover,
+    .feature-card:focus-visible {
+      outline: none;
+      border-color: rgba(203, 141, 255, 0.86);
+      background: rgba(255, 255, 255, 0.18);
+      box-shadow: 0 34px 92px rgba(0, 0, 0, 0.52), 0 0 44px rgba(203, 141, 255, 0.2), inset 0 1px rgba(255, 255, 255, 0.16);
+    }
+
+    .feature-index {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: rgba(255, 255, 255, 0.54);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .feature-index::after {
+      width: 72px;
+      height: 1px;
+      content: "";
+      background: rgba(255, 255, 255, 0.34);
+    }
+
+    .feature-icon {
+      position: relative;
+      display: grid;
+      width: 116px;
+      height: 116px;
+      margin: 49px auto 0;
+      place-items: center;
+      color: var(--purple);
+    }
+
+    .feature-icon::before {
+      position: absolute;
+      width: 82px;
+      height: 82px;
+      border: 1px solid rgba(203, 141, 255, 0.22);
+      border-radius: 50%;
+      content: "";
+      box-shadow: 0 0 48px rgba(203, 141, 255, 0.16);
+    }
+
+    .feature-icon svg {
+      position: relative;
+      width: 76px;
+      height: 76px;
+      overflow: visible;
+      filter: drop-shadow(0 0 12px rgba(203, 141, 255, 0.28));
+    }
+
+    .feature-content {
+      position: relative;
+      margin-top: auto;
+    }
+
+    .feature-title {
+      max-width: 230px;
+      margin: 0 0 16px;
+      font-family: "Instrument Serif", "Songti SC", "Microsoft YaHei", serif;
+      font-size: 34px;
+      font-weight: 400;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+    }
+
+    .feature-copy {
+      margin: 0;
+      color: var(--muted);
+      font-family: "Manrope", sans-serif;
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .category-page {
+      position: absolute;
+      z-index: 8;
+      inset: 0;
+      display: grid;
+      padding: 92px clamp(28px, 6vw, 110px) 48px;
+      place-items: end start;
+      pointer-events: none;
+    }
+
+    .category-board {
+      max-width: min(920px, 92vw);
+      will-change: opacity, transform, filter;
+    }
+
+    .category-kicker {
+      margin: 0 0 18px;
+      color: rgba(255, 255, 255, 0.68);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .category-title {
+      margin: 0;
+      font-family: "Instrument Serif", "Songti SC", "Microsoft YaHei", serif;
+      font-size: clamp(74px, 10vw, 150px);
+      font-weight: 400;
+      line-height: 0.88;
+      letter-spacing: -0.035em;
+      text-shadow: 0 14px 54px rgba(0, 0, 0, 0.56);
+    }
+
+    .category-copy {
+      max-width: 650px;
+      margin: 28px 0 0;
+      color: rgba(255, 255, 255, 0.74);
+      font-family: "Manrope", "Microsoft YaHei", sans-serif;
+      font-size: clamp(15px, 1.3vw, 21px);
+      line-height: 1.55;
+      letter-spacing: 0.02em;
+    }
+
+    #aigc {
+      padding: clamp(54px, 6vh, 74px) clamp(30px, 3vw, 58px) clamp(24px, 3vh, 34px);
+      place-items: center;
+    }
+
+    .aigc-board {
+      position: relative;
+      display: grid;
+      width: min(1840px, 94vw);
+      max-width: none;
+      height: min(75vh, 720px);
+      min-height: 0;
+      grid-template-columns: minmax(0, 1.35fr) minmax(440px, 0.9fr);
+      gap: clamp(14px, 1.15vw, 22px);
+      align-items: stretch;
+    }
+
+    .aigc-player {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.42);
+      background: #050505;
+      box-shadow: 0 36px 110px rgba(0, 0, 0, 0.6);
+      isolation: isolate;
+    }
+
+    .aigc-player::before {
+      position: absolute;
+      z-index: 2;
+      top: 14px;
+      left: 14px;
+      padding: 8px 10px;
+      content: "AIGC / MOVING IMAGE";
+      background: rgba(0, 0, 0, 0.62);
+      color: rgba(255, 255, 255, 0.76);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 9px;
+      letter-spacing: 0.14em;
+      pointer-events: none;
+    }
+
+    .aigc-video {
+      display: block;
+      width: 100%;
+      height: 100%;
+      min-height: 280px;
+      background: #000;
+      object-fit: contain;
+    }
+
+    .aigc-gallery {
+      display: grid;
+      min-width: 0;
+      min-height: 0;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-rows: none;
+      align-content: center;
+      gap: clamp(8px, 0.7vw, 12px);
+    }
+
+    .aigc-shot {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1448 / 1086;
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 0;
+      background: rgba(255, 255, 255, 0.06);
+      cursor: zoom-in;
+      isolation: isolate;
+    }
+
+    .aigc-shot--wide {
+      grid-column: 1 / -1;
+      aspect-ratio: 1098 / 655;
+    }
+
+    .aigc-shot:nth-of-type(5) {
+      aspect-ratio: 1113 / 816;
+    }
+
+    .aigc-shot:nth-of-type(7) {
+      aspect-ratio: 1536 / 1024;
+    }
+
+    .aigc-shot:focus-visible {
+      outline: 2px solid var(--purple);
+      outline-offset: 4px;
+    }
+
+    .aigc-shot img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.96) contrast(1.03);
+      transition: transform 700ms cubic-bezier(0.2, 0.75, 0.25, 1), filter 400ms ease;
+    }
+
+    .aigc-shot--person img {
+      background: #f4f0eb;
+    }
+
+    .aigc-shot--person-right img {
+      background: #cfc8bf;
+    }
+
+    .aigc-shot--person img,
+    .aigc-shot--person-right img {
+      object-fit: contain;
+    }
+
+    .aigc-shot:hover img {
+      filter: saturate(1.06) contrast(1.02);
+      transform: scale(1.025);
+    }
+
+    .aigc-index {
+      position: absolute;
+      z-index: 2;
+      top: 14px;
+      left: 14px;
+      padding: 10px 14px;
+      background: rgba(0, 0, 0, 0.64);
+      color: rgba(255, 255, 255, 0.72);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+    }
+
+    .aigc-meta {
+      position: absolute;
+      z-index: 2;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      min-height: 64px;
+      padding: 13px 16px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: rgba(0, 0, 0, 0.68);
+      -webkit-backdrop-filter: blur(18px);
+      backdrop-filter: blur(18px);
+      color: #fff;
+      text-align: left;
+    }
+
+    .aigc-title {
+      font-family: "Instrument Serif", "Songti SC", "Microsoft YaHei", serif;
+      font-size: clamp(19px, 1.25vw, 26px);
+      line-height: 1.05;
+      letter-spacing: 0;
+    }
+
+    .aigc-action {
+      flex: 0 0 auto;
+      color: rgba(255, 255, 255, 0.66);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 9px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .aigc-index,
+    .aigc-meta {
+      display: none;
+    }
+
+    #modeling {
+      padding: clamp(48px, 5.4vh, 66px) clamp(22px, 2.4vw, 44px) clamp(18px, 2.4vh, 28px);
+      place-items: center;
+    }
+
+    .modeling-board {
+      position: relative;
+      display: grid;
+      width: min(1880px, 96vw);
+      max-width: none;
+      height: min(78vh, 760px);
+      min-height: 0;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-rows: repeat(4, minmax(0, 1fr));
+      gap: clamp(5px, 0.45vw, 8px);
+      align-items: stretch;
+      grid-auto-flow: dense;
+    }
+
+    .modeling-card {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 0;
+      background: #e8e7e3;
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+      cursor: zoom-in;
+      isolation: isolate;
+    }
+
+    .modeling-card--lead {
+      grid-column: span 2;
+      grid-row: span 2;
+      border-color: rgba(255, 255, 255, 0.28);
+      box-shadow: 0 32px 100px rgba(0, 0, 0, 0.5);
+    }
+
+    .modeling-card--portrait {
+      grid-row: span 3;
+    }
+
+    .modeling-card--tall {
+      grid-row: span 2;
+    }
+
+    .modeling-card--wide {
+      grid-column: span 2;
+    }
+
+    .modeling-card--panorama {
+      grid-column: 1 / -1;
+    }
+
+    .modeling-card:focus-visible {
+      outline: 2px solid var(--purple);
+      outline-offset: 4px;
+    }
+
+    .modeling-image {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: #e8e7e3;
+      object-fit: cover;
+      filter: saturate(0.94) contrast(1.04);
+      transition: transform 700ms cubic-bezier(0.2, 0.75, 0.25, 1), filter 400ms ease;
+    }
+
+    .modeling-card--lead .modeling-image,
+    .modeling-card--tall .modeling-image {
+      object-fit: contain;
+    }
+
+    .modeling-card--dark,
+    .modeling-card--dark .modeling-image {
+      background: #171717;
+    }
+
+    .modeling-card:hover .modeling-image,
+    .modeling-card:focus-visible .modeling-image {
+      filter: saturate(1.05) contrast(1.02);
+      transform: scale(1.025);
+    }
+
+    .image-lightbox {
+      position: fixed;
+      z-index: 210;
+      inset: 0;
+      display: grid;
+      visibility: hidden;
+      padding: 24px;
+      place-items: center;
+      background: rgba(0, 0, 0, 0.96);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 260ms ease, visibility 260ms ease;
+    }
+
+    .image-lightbox.is-open {
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .lightbox-inner {
+      display: grid;
+      width: min(1500px, 100%);
+      max-height: calc(100vh - 48px);
+      grid-template-rows: auto minmax(0, 1fr);
+      gap: 10px;
+    }
+
+    .lightbox-bar {
+      display: flex;
+      min-height: 44px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+    }
+
+    .lightbox-index {
+      color: var(--purple);
+    }
+
+    .lightbox-close {
+      min-width: 76px;
+      height: 38px;
+      padding: 0 16px;
+      border: 1px solid rgba(255, 255, 255, 0.42);
+      border-radius: 0;
+      background: transparent;
+      color: #fff;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+    }
+
+    .lightbox-close:hover,
+    .lightbox-close:focus-visible {
+      outline: none;
+      border-color: var(--purple);
+      background: var(--purple);
+      color: #130b18;
+    }
+
+    .lightbox-image {
+      display: block;
+      width: 100%;
+      max-height: calc(100vh - 112px);
+      object-fit: contain;
+      background: #050505;
+    }
+
+    body.is-lightbox-open {
+      overflow: hidden;
+    }
+
+    .showreel {
+      position: absolute;
+      z-index: 8;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+    }
+
+    .work-board {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      padding: 94px clamp(28px, 4vw, 72px) 42px;
+      place-items: center;
+      will-change: opacity, transform, filter;
+    }
+
+    .work-grid {
+      display: grid;
+      width: min(1840px, 92vw);
+      height: min(74vh, 740px);
+      grid-template-columns: minmax(0, 1.42fr) minmax(360px, 0.92fr);
+      gap: clamp(14px, 1.25vw, 24px);
+      align-items: stretch;
+    }
+
+    .work-side-grid {
+      display: grid;
+      min-height: 0;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      grid-template-rows: 1.16fr 1fr 1fr;
+      gap: clamp(10px, 0.9vw, 16px);
+    }
+
+    .work-card {
+      position: relative;
+      width: 100%;
+      min-height: 0;
+      height: 100%;
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.48);
+      border-radius: 0;
+      background: #090909;
+      box-shadow: 0 32px 90px rgba(0, 0, 0, 0.56);
+      cursor: pointer;
+      isolation: isolate;
+    }
+
+    .work-card--wide {
+      grid-column: 1 / -1;
+    }
+
+    .work-card--hero {
+      box-shadow: 0 38px 120px rgba(0, 0, 0, 0.62);
+    }
+
+    .work-card:focus-visible {
+      outline: 2px solid var(--purple);
+      outline-offset: 4px;
+    }
+
+    .work-preview {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: saturate(0.92) contrast(1.04);
+      transition: transform 700ms cubic-bezier(0.2, 0.75, 0.25, 1), filter 400ms ease;
+    }
+
+    .work-card:hover .work-preview,
+    .work-card:focus-visible .work-preview {
+      filter: saturate(1.05) contrast(1.02);
+      transform: scale(1.025);
+    }
+
+    .work-index {
+      position: absolute;
+      z-index: 2;
+      top: 14px;
+      left: 14px;
+      padding: 8px 10px;
+      background: rgba(0, 0, 0, 0.64);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 9px;
+      letter-spacing: 0.16em;
+    }
+
+    .work-card--hero .work-index {
+      top: 20px;
+      left: 20px;
+      padding: 10px 13px;
+      font-size: 10px;
+    }
+
+    .work-meta {
+      position: absolute;
+      z-index: 2;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: flex;
+      min-height: 68px;
+      padding: 14px 16px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      background: rgba(0, 0, 0, 0.67);
+      -webkit-backdrop-filter: blur(18px);
+      backdrop-filter: blur(18px);
+      text-align: left;
+    }
+
+    .work-card--hero .work-meta {
+      min-height: 82px;
+      padding: 18px 22px;
+    }
+
+    .work-title {
+      font-family: "Instrument Serif", "Songti SC", serif;
+      font-size: clamp(21px, 1.8vw, 30px);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .work-card--hero .work-title {
+      font-size: clamp(30px, 2.35vw, 44px);
+    }
+
+    .work-side-grid .work-title {
+      font-size: clamp(17px, 1.18vw, 23px);
+    }
+
+    .work-side-grid .work-meta {
+      min-height: 56px;
+      padding: 10px 12px;
+    }
+
+    .work-action {
+      flex: 0 0 auto;
+      color: rgba(255, 255, 255, 0.72);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 9px;
+      letter-spacing: 0.14em;
+    }
+
+    .film-theater {
+      position: fixed;
+      z-index: 200;
+      inset: 0;
+      display: grid;
+      visibility: hidden;
+      padding: 24px;
+      place-items: center;
+      background: rgba(0, 0, 0, 0.96);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 260ms ease, visibility 260ms ease;
+    }
+
+    .film-theater.is-open {
+      visibility: visible;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .theater-inner {
+      width: min(1600px, 100%);
+    }
+
+    .theater-bar {
+      display: flex;
+      min-height: 44px;
+      margin-bottom: 10px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+    }
+
+    .theater-label {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .theater-index {
+      color: var(--purple);
+    }
+
+    .theater-close {
+      min-width: 76px;
+      height: 38px;
+      padding: 0 16px;
+      border: 1px solid rgba(255, 255, 255, 0.42);
+      border-radius: 0;
+      background: transparent;
+      color: #fff;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+    }
+
+    .theater-close:hover,
+    .theater-close:focus-visible {
+      outline: none;
+      border-color: var(--purple);
+      background: var(--purple);
+      color: #130b18;
+    }
+
+    .theater-video {
+      display: block;
+      width: 100%;
+      max-height: calc(100vh - 112px);
+      aspect-ratio: 16 / 9;
+      background: #000;
+      object-fit: contain;
+    }
+
+    body.is-theater-open {
+      overflow: hidden;
+    }
+
+    .loading-layer,
+    .error-layer {
+      position: fixed;
+      z-index: 100;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: #000;
+      transition: opacity 600ms ease, visibility 600ms ease;
+    }
+
+    .loading-layer.is-hidden {
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loading-inner,
+    .error-inner {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+    }
+
+    .spinner {
+      width: 42px;
+      height: 42px;
+      margin-bottom: 22px;
+      border: 2px solid rgba(255, 255, 255, 0.22);
+      border-top-color: #fff;
+      border-radius: 50%;
+      animation: spin 800ms linear infinite;
+    }
+
+    .loading-label {
+      margin: 0;
+      color: #fff;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .loading-progress {
+      margin-top: 10px;
+      color: rgba(255, 255, 255, 0.42);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 9px;
+      letter-spacing: 0.08em;
+    }
+
+    .error-layer {
+      display: none;
+      padding: 24px;
+    }
+
+    .error-layer.is-visible {
+      display: grid;
+    }
+
+    .error-title {
+      margin: 0 0 16px;
+      font-family: "Instrument Serif", serif;
+      font-size: clamp(44px, 6vw, 72px);
+      font-weight: 400;
+    }
+
+    .error-copy {
+      max-width: 580px;
+      margin: 0;
+      color: var(--muted);
+      font-family: "Manrope", sans-serif;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 1080px) {
+      .aigc-board {
+        display: grid;
+        width: min(760px, 92vw);
+        height: calc(100vh - 112px);
+        min-height: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        gap: 12px;
+        padding-right: 4px;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.26) transparent;
+      }
+
+      .aigc-player {
+        position: relative;
+        top: auto;
+        left: auto;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+      }
+
+      .aigc-video {
+        min-height: 0;
+      }
+
+      .aigc-gallery {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-auto-rows: auto;
+        grid-template-rows: none;
+        grid-column: auto;
+        gap: 12px;
+      }
+
+      .aigc-shot,
+      .aigc-shot--side-left,
+      .aigc-shot--side-right,
+      .aigc-shot--lower-left,
+      .aigc-shot--lower-mid-left,
+      .aigc-shot--lower-mid,
+      .aigc-shot--lower-right,
+      .aigc-shot--bottom-right {
+        position: relative;
+        inset: auto;
+        grid-column: auto;
+        grid-row: auto;
+        margin-left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      .aigc-shot--side-left,
+      .aigc-shot--side-right,
+      .aigc-shot--lower-left,
+      .aigc-shot--lower-right {
+        grid-column: auto;
+      }
+
+      .aigc-shot--wide {
+        grid-column: 1 / -1;
+      }
+
+      .aigc-shot img {
+        height: auto;
+        min-height: 0;
+      }
+
+      .work-board {
+        padding: 84px 22px 24px;
+        place-items: start center;
+      }
+
+      .work-grid {
+        width: 100%;
+        height: calc(100vh - 118px);
+        overflow-x: hidden;
+        overflow-y: auto;
+        grid-template-columns: 1fr;
+        gap: 12px;
+        padding-right: 4px;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.26) transparent;
+      }
+
+      .work-side-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: none;
+        gap: 12px;
+      }
+
+      .work-card,
+      .work-card--hero,
+      .work-card--wide {
+        height: auto;
+        aspect-ratio: 16 / 9;
+      }
+
+      .work-card--wide {
+        grid-column: auto;
+      }
+
+      .modeling-board {
+        display: grid;
+        width: min(760px, 92vw);
+        height: calc(100vh - 112px);
+        min-height: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        gap: 12px;
+        padding-right: 4px;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.26) transparent;
+      }
+
+      .modeling-card--lead {
+        aspect-ratio: 16 / 9;
+      }
+
+      .modeling-card,
+      .modeling-card--lead,
+      .modeling-card--portrait,
+      .modeling-card--tall,
+      .modeling-card--wide,
+      .modeling-card--panorama {
+        grid-column: auto;
+        grid-row: auto;
+        height: auto;
+        aspect-ratio: 16 / 9;
+      }
+
+      .modeling-card--tall {
+        aspect-ratio: 4 / 5;
+      }
+
+    }
+
+    @media (max-width: 720px) {
+      body {
+        min-height: 520vh;
+      }
+
+      .brand {
+        top: 24px;
+        left: 24px;
+      }
+
+      .brand-mark {
+        width: 27px;
+        height: 27px;
+      }
+
+      .brand-name {
+        font-size: 20px;
+      }
+
+      .hero-card {
+        bottom: 24px;
+        left: 24px;
+        width: calc(100vw - 48px);
+        min-height: 0;
+        padding: 28px 28px 96px;
+      }
+
+      .hero-title {
+        font-size: 38px;
+        line-height: 0.98;
+      }
+
+      .hero-copy {
+        margin-top: 22px;
+        font-size: 11px;
+        line-height: 1.58;
+      }
+
+      .hero-cta {
+        right: 24px;
+        bottom: 22px;
+        width: 62px;
+        height: 62px;
+      }
+
+      .hero-cta svg {
+        width: 25px;
+        height: 25px;
+      }
+
+      .features {
+        padding: 86px 24px 24px;
+      }
+
+      .feature-grid {
+        max-height: calc(100vh - 116px);
+        padding-right: 2px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        flex-direction: column;
+        justify-content: flex-start;
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.26) transparent;
+      }
+
+      .feature-card {
+        width: calc(100vw - 48px);
+        height: 260px;
+        min-height: 260px;
+        padding: 22px;
+      }
+
+      .feature-icon {
+        position: absolute;
+        top: 45px;
+        right: 17px;
+        width: 92px;
+        height: 92px;
+        margin: 0;
+      }
+
+      .feature-icon::before {
+        width: 68px;
+        height: 68px;
+      }
+
+      .feature-icon svg {
+        width: 60px;
+        height: 60px;
+      }
+
+      .feature-content {
+        max-width: calc(100% - 75px);
+      }
+
+      .feature-title {
+        margin-bottom: 11px;
+        font-size: 30px;
+      }
+
+      .feature-copy {
+        font-size: 12px;
+      }
+
+      .category-page {
+        padding: 82px 24px 34px;
+      }
+
+      .category-kicker {
+        margin-bottom: 13px;
+        font-size: 10px;
+      }
+
+      .category-title {
+        font-size: clamp(52px, 18vw, 86px);
+        line-height: 0.92;
+      }
+
+      .category-copy {
+        margin-top: 18px;
+        font-size: 13px;
+      }
+
+      .aigc-board {
+        width: 100%;
+        height: calc(100vh - 104px);
+        min-height: 0;
+      }
+
+      .aigc-player::before {
+        top: 10px;
+        left: 10px;
+        max-width: calc(100% - 20px);
+        font-size: 8px;
+      }
+
+      .aigc-shot,
+      .aigc-shot--side-left,
+      .aigc-shot--side-right,
+      .aigc-shot--lower-left,
+      .aigc-shot--lower-mid-left,
+      .aigc-shot--lower-mid,
+      .aigc-shot--lower-right,
+      .aigc-shot--bottom-right {
+        flex: 0 0 auto;
+        width: 100%;
+      }
+
+      .aigc-gallery {
+        grid-template-columns: 1fr;
+        grid-auto-rows: auto;
+      }
+
+      .aigc-shot--wide {
+        grid-column: auto;
+      }
+
+      .image-lightbox {
+        padding: 16px;
+      }
+
+      .lightbox-bar {
+        min-height: 38px;
+      }
+
+      .lightbox-image {
+        max-height: calc(100vh - 92px);
+      }
+
+      .work-board {
+        padding: 82px 20px 22px;
+      }
+
+      .work-grid {
+        gap: 12px;
+        height: calc(100vh - 112px);
+      }
+
+      .work-meta {
+        min-height: 54px;
+        padding: 11px 13px;
+      }
+
+      .work-card--hero .work-meta {
+        min-height: 60px;
+        padding: 12px 14px;
+      }
+
+      .work-title {
+        font-size: 20px;
+      }
+
+      .work-card--hero .work-title {
+        font-size: 24px;
+      }
+
+      .work-action {
+        font-size: 8px;
+      }
+
+      .modeling-board {
+        width: 100%;
+        height: calc(100vh - 104px);
+        min-height: 0;
+      }
+
+      .modeling-card,
+      .modeling-card--lead,
+      .modeling-card--portrait,
+      .modeling-card--tall,
+      .modeling-card--wide,
+      .modeling-card--panorama {
+        grid-column: auto;
+        grid-row: auto;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+      }
+
+      .modeling-card--tall {
+        aspect-ratio: 4 / 5;
+      }
+
+      .film-theater {
+        padding: 16px;
+      }
+
+      .theater-bar {
+        margin-bottom: 8px;
+      }
+
+      .theater-title {
+        max-width: 190px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .theater-video {
+        max-height: calc(100vh - 96px);
+      }
+
+    }
+
+    @media (max-height: 670px) and (min-width: 721px) {
+      .hero-card {
+        bottom: 24px;
+        min-height: 0;
+        padding-top: 30px;
+        padding-bottom: 30px;
+      }
+
+      .hero-title {
+        font-size: 54px;
+      }
+
+      .hero-copy {
+        margin-top: 22px;
+      }
+
+      .feature-card {
+        height: 390px;
+      }
+
+      .feature-icon {
+        margin-top: 24px;
+      }
+
+      .work-board {
+        padding-top: 72px;
+        padding-bottom: 22px;
+      }
+
+      .work-grid {
+        height: min(78vh, 620px);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage" aria-label="郑浩然个人作品集">
+    <canvas id="frame-canvas" aria-hidden="true"></canvas>
+    <div class="cinematic-shade" aria-hidden="true"></div>
+
+    <div class="brand" id="brand" aria-label="郑浩然">
+      <svg class="brand-mark" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+        <path d="M24 22.1C20.7 17.9 19.5 11.3 24 4c4.5 7.3 3.3 13.9 0 18.1Z" fill="white"/>
+        <path d="M25.9 24C30.1 20.7 36.7 19.5 44 24c-7.3 4.5-13.9 3.3-18.1 0Z" fill="white"/>
+        <path d="M24 25.9c3.3 4.2 4.5 10.8 0 18.1-4.5-7.3-3.3-13.9 0-18.1Z" fill="white"/>
+        <path d="M22.1 24C17.9 27.3 11.3 28.5 4 24c7.3-4.5 13.9-3.3 18.1 0Z" fill="white"/>
+        <path d="M22.7 22.7c-5.3-.6-10.8-4.4-12.8-12.8 8.4 2 12.2 7.5 12.8 12.8Z" fill="white" fill-opacity=".82"/>
+        <path d="M25.3 22.7c.6-5.3 4.4-10.8 12.8-12.8-2 8.4-7.5 12.2-12.8 12.8Z" fill="white" fill-opacity=".82"/>
+        <circle cx="24" cy="24" r="3.9" fill="white"/>
+      </svg>
+      <span class="brand-name">郑浩然</span>
+    </div>
+
+    <section class="hero" aria-label="个人介绍">
+      <article class="hero-card" id="hero-card">
+        <h1 class="hero-title">郑浩然</h1>
+        <p class="hero-copy">浙江科技大学 · 视觉传达专业</p>
+        <button class="hero-cta" id="feature-jump" type="button" aria-label="向下浏览作品">
+          <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <path d="M6 16h19M18 8l8 8-8 8" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </article>
+    </section>
+
+    <section class="features" id="features" aria-label="Bloom systems">
+      <div class="feature-grid">
+        <a class="feature-card" href="#aigc" data-target="aigc" aria-label="进入 AIGC 页面">
+          <div class="feature-index"><span>System 01</span></div>
+          <div class="feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 80 80" fill="none">
+              <circle cx="40" cy="40" r="25" stroke="currentColor" stroke-width="1.5"/>
+              <circle cx="40" cy="40" r="15" stroke="currentColor" stroke-width="1.5" stroke-dasharray="3 4"/>
+              <path d="M40 7v12M40 61v12M7 40h12M61 40h12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <circle cx="40" cy="40" r="4" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="feature-content">
+            <h2 class="feature-title">AIGC</h2>
+            <p class="feature-copy">AI image generation, concept design, and visual experiments.</p>
+          </div>
+        </a>
+
+        <a class="feature-card" href="#video" data-target="video" aria-label="进入视频页面">
+          <div class="feature-index"><span>System 02</span></div>
+          <div class="feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 80 80" fill="none">
+              <path d="m40 7 5.2 22.4L62 18 50.6 34.8 73 40l-22.4 5.2L62 62 45.2 50.6 40 73l-5.2-22.4L18 62l11.4-16.8L7 40l22.4-5.2L18 18l16.8 11.4L40 7Z" stroke="currentColor" stroke-width="1.45" stroke-linejoin="round"/>
+              <circle cx="40" cy="40" r="7.5" stroke="currentColor" stroke-width="1.5"/>
+              <circle cx="40" cy="40" r="2.3" fill="currentColor"/>
+            </svg>
+          </div>
+          <div class="feature-content">
+            <h2 class="feature-title">视频</h2>
+            <p class="feature-copy">Commercial shoots, event films, and edited motion work.</p>
+          </div>
+        </a>
+
+        <a class="feature-card" href="#modeling" data-target="modeling" aria-label="进入 3D 建模页面">
+          <div class="feature-index"><span>System 03</span></div>
+          <div class="feature-icon" aria-hidden="true">
+            <svg viewBox="0 0 80 80" fill="none">
+              <path d="M46.5 7 20 43h19l-5.5 30L61 34H42l4.5-27Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+              <path d="M50 17 29.5 40H43l-2.5 17L53 38H39.5L50 17Z" stroke="currentColor" stroke-width="1" stroke-dasharray="2 3" opacity=".55"/>
+            </svg>
+          </div>
+          <div class="feature-content">
+            <h2 class="feature-title">3D建模</h2>
+            <p class="feature-copy">Spatial modeling, product scenes, and rendered visual assets.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <section class="category-page" id="aigc" aria-label="AIGC 页面">
+      <article class="category-board aigc-board" data-page="aigc">
+        <div class="aigc-player">
+          <img class="aigc-video" src="media/aigc/aigc-03.png" alt="AIGC 动态作品预览">
+        </div>
+        <div class="aigc-gallery" aria-label="AIGC 图片作品">
+          <button class="aigc-shot aigc-shot--wide" type="button" data-image="media/aigc/aigc-01.png" data-image-index="01 / 07" data-image-title="AIGC 提示词文档" aria-label="放大查看 AIGC 提示词文档">
+            <img src="media/aigc/aigc-01.png" alt="AIGC 提示词文档" loading="lazy">
+            <span class="aigc-index">01 / 07</span>
+            <span class="aigc-meta"><span class="aigc-title">提示词文档</span><span class="aigc-action">VIEW IMAGE</span></span>
+          </button>
+          <button class="aigc-shot" type="button" data-image="media/aigc/aigc-02.png" data-image-index="02 / 07" data-image-title="AIGC 室内空间" aria-label="放大查看 AIGC 室内空间">
+            <img src="media/aigc/aigc-02.png" alt="AIGC 室内空间" loading="lazy">
+            <span class="aigc-index">02 / 07</span>
+            <span class="aigc-meta"><span class="aigc-title">室内空间</span><span class="aigc-action">VIEW IMAGE</span></span>
+          </button>
+          <button class="aigc-shot" type="button" data-image="media/aigc/aigc-03.png" data-image-index="03 / 07" data-image-title="AIGC 雨街场景" aria-label="放大查看 AIGC 雨街场景">
+            <img src="media/aigc/aigc-03.png" alt="AIGC 雨街场景" loading="lazy">
+            <span class="aigc-index">03 / 07</span>
+            <span class="aigc-meta"><span class="aigc-title">雨街场景</span><span class="aigc-action">VIEW IMAGE</span></span>
+          </button>
+          <button class="aigc-shot aigc-shot--person aigc-shot--person-right" type="button" data-image="media/aigc/aigc-04.png" data-image-index="04 / 07" data-image-title="AIGC 男士三视图" aria-label="放大查看 AIGC 男士三视图">
+            <img src="media/aigc/aigc-04.png" alt="AIGC 男士三视图" loading="lazy">
+            <span class="aigc-index">04 / 07</span>
+            <span class="aigc-meta"><span class="aigc-title">男士三视图</span><span class="aigc-action">VIEW IMAGE</span></span>
+          </button>
+          <button class="aigc-shot" type="button" data-image="media/aigc/aigc-05.png" data-image-index="05 / 07" data-image-title="AIGC 分镜版面" aria-label="放大查看 AIGC 分镜版面">
+            <img src="media/aigc/aigc-05.png" alt="AIGC 分镜版面" loading="lazy">
+            <span class="aigc-index">05 / 07</span>
+            <span class="aigc-meta"><span class="aigc-title">分镜版面</span><span class="aigc-action">VIEW IMAGE</span></span>
+          </button>
+          <button class="aigc-shot" type="button" data-image="media/aigc/aigc-06.png" data-image-index="06 / 07" data-image-title="AIGC 人像场景" aria-label="放大查看 AIGC 人像场景">
+            <img src="media/aigc/aigc-06.png" alt="AIGC 人像场景" loading="lazy">
+            <span class="aigc-index">06 / 07</span>
+            <span class="aigc-meta"><span class="aigc-title">人像场景</span><span class="aigc-action">VIEW IMAGE</span></span>
+          </button>
+          <button class="aigc-shot aigc-shot--person" type="button" data-image="media/aigc/aigc-07.png" data-image-index="07 / 07" data-image-title="AIGC 年轻女子三视图" aria-label="放大查看 AIGC 年轻女子三视图">
+            <img src="media/aigc/aigc-07.png" alt="AIGC 年轻女子三视图" loading="lazy">
+            <span class="aigc-index">07 / 07</span>
+            <span class="aigc-meta"><span class="aigc-title">女子三视图</span><span class="aigc-action">VIEW IMAGE</span></span>
+          </button>
+        </div>
+      </article>
+    </section>
+
+    <section class="showreel" id="video" aria-label="视频作品">
+      <article class="work-board" id="work-board" aria-label="六支视频作品">
+        <div class="work-grid">
+          <button class="work-card work-card--hero" type="button" data-film="media/01-gatsby-night.mp4" data-film-index="01" data-film-title="活动 · 盖茨比之夜" aria-label="播放活动盖茨比之夜">
+            <video class="work-preview" src="media/01-gatsby-night.mp4" poster="media/01-gatsby-night.webp" muted loop playsinline preload="none"></video>
+            <span class="work-index">01 / 06</span>
+            <span class="work-meta"><span class="work-title">活动 · 盖茨比之夜</span><span class="work-action">PLAY FILM</span></span>
+          </button>
+          <div class="work-side-grid">
+            <button class="work-card work-card--wide" type="button" data-film="media/02-jiuqie-academy.mp4" data-film-index="02" data-film-title="酒茄学院 · 开业" aria-label="播放酒茄学院开业">
+              <video class="work-preview" src="media/02-jiuqie-academy.mp4" poster="media/02-jiuqie-academy.webp" muted loop playsinline preload="none"></video>
+              <span class="work-index">02 / 06</span>
+              <span class="work-meta"><span class="work-title">酒茄学院 · 开业</span><span class="work-action">PLAY FILM</span></span>
+            </button>
+            <button class="work-card" type="button" data-film="media/03-manqu-space.mp4" data-film-index="03" data-film-title="漫趣空间" aria-label="播放漫趣空间">
+              <video class="work-preview" src="media/03-manqu-space.mp4" poster="media/03-manqu-space.webp" muted loop playsinline preload="none"></video>
+              <span class="work-index">03 / 06</span>
+              <span class="work-meta"><span class="work-title">漫趣空间</span><span class="work-action">PLAY FILM</span></span>
+            </button>
+            <button class="work-card" type="button" data-film="media/04-qihong-party.mp4" data-film-index="04" data-film-title="漆轰趴" aria-label="播放漆轰趴视频">
+              <video class="work-preview" src="media/04-qihong-party.mp4" poster="media/04-qihong-party.webp" muted loop playsinline preload="none"></video>
+              <span class="work-index">04 / 06</span>
+              <span class="work-meta"><span class="work-title">漆轰趴</span><span class="work-action">PLAY FILM</span></span>
+            </button>
+            <button class="work-card" type="button" data-film="media/05-zhengda-opening.mp4" data-film-index="05" data-film-title="正大店 · 开业" aria-label="播放正大店开业">
+              <video class="work-preview" src="media/05-zhengda-opening.mp4" poster="media/05-zhengda-opening.webp" muted loop playsinline preload="none"></video>
+              <span class="work-index">05 / 06</span>
+              <span class="work-meta"><span class="work-title">正大店 · 开业</span><span class="work-action">PLAY FILM</span></span>
+            </button>
+            <button class="work-card" type="button" data-film="media/06-danlu-anniversary.mp4" data-film-index="06" data-film-title="丹麓酒庄 · 十周年" aria-label="播放丹麓酒庄十周年">
+              <video class="work-preview" src="media/06-danlu-anniversary.mp4" poster="media/06-danlu-anniversary.webp" muted loop playsinline preload="none"></video>
+              <span class="work-index">06 / 06</span>
+              <span class="work-meta"><span class="work-title">丹麓酒庄 · 十周年</span><span class="work-action">PLAY FILM</span></span>
+            </button>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="category-page" id="modeling" aria-label="3D 建模页面">
+      <article class="category-board modeling-board" data-page="modeling">
+        <button class="modeling-card modeling-card--lead modeling-card--portrait" type="button" data-image="media/modeling/modeling-01.jpg" data-image-index="01 / 12" data-image-title="3D 建模作品 01" aria-label="放大查看 3D 建模作品 01">
+          <img class="modeling-image" src="media/modeling/modeling-01.jpg" alt="3D 建模作品 01" loading="lazy">
+        </button>
+        <button class="modeling-card modeling-card--tall modeling-card--dark" type="button" data-image="media/modeling/modeling-02.png" data-image-index="02 / 12" data-image-title="3D 建模作品 02" aria-label="放大查看 3D 建模作品 02">
+          <img class="modeling-image" src="media/modeling/modeling-02.png" alt="3D 建模作品 02" loading="lazy">
+        </button>
+        <button class="modeling-card modeling-card--wide modeling-card--dark" type="button" data-image="media/modeling/modeling-03.png" data-image-index="03 / 12" data-image-title="3D 建模作品 03" aria-label="放大查看 3D 建模作品 03">
+          <img class="modeling-image" src="media/modeling/modeling-03.png" alt="3D 建模作品 03" loading="lazy">
+        </button>
+        <button class="modeling-card modeling-card--wide modeling-card--dark" type="button" data-image="media/modeling/modeling-04.png" data-image-index="04 / 12" data-image-title="3D 建模作品 04" aria-label="放大查看 3D 建模作品 04">
+          <img class="modeling-image" src="media/modeling/modeling-04.png" alt="3D 建模作品 04" loading="lazy">
+        </button>
+        <button class="modeling-card modeling-card--tall modeling-card--dark" type="button" data-image="media/modeling/modeling-05.png" data-image-index="05 / 12" data-image-title="3D 建模作品 05" aria-label="放大查看 3D 建模作品 05">
+          <img class="modeling-image" src="media/modeling/modeling-05.png" alt="3D 建模作品 05" loading="lazy">
+        </button>
+        <button class="modeling-card modeling-card--wide" type="button" data-image="media/modeling/modeling-06.png" data-image-index="06 / 12" data-image-title="3D 建模作品 06" aria-label="放大查看 3D 建模作品 06">
+          <img class="modeling-image" src="media/modeling/modeling-06.png" alt="3D 建模作品 06" loading="lazy">
+        </button>
+        <button class="modeling-card modeling-card--wide" type="button" data-image="media/modeling/modeling-07.jpg" data-image-index="07 / 12" data-image-title="3D 建模作品 07" aria-label="放大查看 3D 建模作品 07">
+          <img class="modeling-image" src="media/modeling/modeling-07.jpg" alt="3D 建模作品 07" loading="lazy">
+        </button>
+        <button class="modeling-card" type="button" data-image="media/modeling/modeling-08.jpg" data-image-index="08 / 12" data-image-title="3D 建模作品 08" aria-label="放大查看 3D 建模作品 08">
+          <img class="modeling-image" src="media/modeling/modeling-08.jpg" alt="3D 建模作品 08" loading="lazy">
+        </button>
+        <button class="modeling-card" type="button" data-image="media/modeling/modeling-09.jpg" data-image-index="09 / 12" data-image-title="3D 建模作品 09" aria-label="放大查看 3D 建模作品 09">
+          <img class="modeling-image" src="media/modeling/modeling-09.jpg" alt="3D 建模作品 09" loading="lazy">
+        </button>
+        <button class="modeling-card" type="button" data-image="media/modeling/modeling-10.jpg" data-image-index="10 / 12" data-image-title="3D 建模作品 10" aria-label="放大查看 3D 建模作品 10">
+          <img class="modeling-image" src="media/modeling/modeling-10.jpg" alt="3D 建模作品 10" loading="lazy">
+        </button>
+        <button class="modeling-card" type="button" data-image="media/modeling/modeling-11.png" data-image-index="11 / 12" data-image-title="3D 建模作品 11" aria-label="放大查看 3D 建模作品 11">
+          <img class="modeling-image" src="media/modeling/modeling-11.png" alt="3D 建模作品 11" loading="lazy">
+        </button>
+        <button class="modeling-card" type="button" data-image="media/modeling/modeling-12.png" data-image-index="12 / 12" data-image-title="3D 建模作品 12" aria-label="放大查看 3D 建模作品 12">
+          <img class="modeling-image" src="media/modeling/modeling-12.png" alt="3D 建模作品 12" loading="lazy">
+        </button>
+      </article>
+    </section>
+
+    <section class="future-space" aria-label="预留内容区域"></section>
+
+  </main>
+
+  <div class="film-theater" id="film-theater" role="dialog" aria-modal="true" aria-hidden="true" aria-label="作品播放器">
+    <div class="theater-inner">
+      <div class="theater-bar">
+        <div class="theater-label"><span class="theater-index" id="theater-index">01 / 06</span><span class="theater-title" id="theater-title"></span></div>
+        <button class="theater-close" id="theater-close" type="button">关闭</button>
+      </div>
+      <video class="theater-video" id="theater-video" controls playsinline preload="metadata"></video>
+    </div>
+  </div>
+
+  <div class="image-lightbox" id="image-lightbox" role="dialog" aria-modal="true" aria-hidden="true" aria-label="图片预览">
+    <div class="lightbox-inner">
+      <div class="lightbox-bar">
+        <span class="lightbox-index" id="lightbox-index">01 / 07</span>
+        <button class="lightbox-close" id="lightbox-close" type="button">关闭</button>
+      </div>
+      <img class="lightbox-image" id="lightbox-image" alt="">
+    </div>
+  </div>
+
+  <div class="loading-layer" id="loading-layer" role="status" aria-live="polite">
+    <div class="loading-inner">
+      <div class="spinner" aria-hidden="true"></div>
+      <p class="loading-label">Loading experience</p>
+      <span class="loading-progress" id="loading-progress">LOADING FIRST FRAME</span>
+    </div>
+  </div>
+
+  <div class="error-layer" id="error-layer" role="alert">
+    <div class="error-inner">
+      <h2 class="error-title">Frame Load Error</h2>
+      <p class="error-copy">Unable to load image resources. Please check your connection and try reloading.</p>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      "use strict";
+
+      const FRAMES_PER_SEGMENT = 144;
+      const SEGMENT_COUNT = 3;
+      const TOTAL_FRAMES = FRAMES_PER_SEGMENT * SEGMENT_COUNT;
+      const IS_DESKTOP = window.matchMedia("(min-width: 768px)").matches;
+      const FRAME_ROOT = IS_DESKTOP ? "frames-desktop" : "frames";
+      const CACHE_RADIUS = IS_DESKTOP ? 8 : 18;
+      const MAX_DECODED_FRAMES = IS_DESKTOP ? 16 : 48;
+      const MAX_CONCURRENT_DECODES = 6;
+      const canvas = document.getElementById("frame-canvas");
+      const context = canvas.getContext("2d", { alpha: false, desynchronized: true });
+      const loadingLayer = document.getElementById("loading-layer");
+      const loadingProgress = document.getElementById("loading-progress");
+      const errorLayer = document.getElementById("error-layer");
+      const brand = document.getElementById("brand");
+      const heroCard = document.getElementById("hero-card");
+      const featureSection = document.getElementById("features");
+      const featureCards = Array.from(document.querySelectorAll(".feature-card"));
+      const categoryBoards = Array.from(document.querySelectorAll("[data-page]"));
+      const workBoard = document.getElementById("work-board");
+      const previewVideos = Array.from(document.querySelectorAll(".work-preview"));
+      const filmButtons = Array.from(document.querySelectorAll("[data-film]"));
+      const filmTheater = document.getElementById("film-theater");
+      const theaterVideo = document.getElementById("theater-video");
+      const theaterIndex = document.getElementById("theater-index");
+      const theaterTitle = document.getElementById("theater-title");
+      const theaterClose = document.getElementById("theater-close");
+      const imageButtons = Array.from(document.querySelectorAll("[data-image]"));
+      const imageLightbox = document.getElementById("image-lightbox");
+      const lightboxImage = document.getElementById("lightbox-image");
+      const lightboxIndex = document.getElementById("lightbox-index");
+      const lightboxClose = document.getElementById("lightbox-close");
+      const featureJump = document.getElementById("feature-jump");
+
+      document.documentElement.dataset.frameVariant = IS_DESKTOP ? "desktop-1920" : "mobile-840";
+
+      const frameCache = new Map();
+      const pendingFrames = new Map();
+      const pendingDownloads = new Map();
+      const warmedFrames = new Set();
+      const queuedFrames = new Set();
+      const loadQueue = [];
+
+      let targetProgress = 0;
+      let currentProgress = 0;
+      let canvasDirty = true;
+      let lastFrameKey = "";
+      let ready = false;
+      let activeLoads = 0;
+      let targetGlobalFrame = 0;
+      let lastPrefetchCenter = -1;
+      let previewsAreActive = false;
+      let activePreviewVideo = null;
+      let theaterReturnFocus = null;
+      let lightboxReturnFocus = null;
+
+      const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
+      const mix = (from, to, amount) => from + (to - from) * amount;
+      const PAGE_TARGETS = {
+        aigc: 0.60,
+        video: 0.69,
+        modeling: 0.86
+      };
+      const smoothstep = (edge0, edge1, value) => {
+        const x = clamp((value - edge0) / (edge1 - edge0));
+        return x * x * (3 - 2 * x);
+      };
+
+      function updateTargetProgress() {
+        const scrollable = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+        targetProgress = clamp(window.scrollY / scrollable);
+      }
+
+      function resizeCanvas() {
+        const ratio = Math.min(window.devicePixelRatio || 1, 2);
+        const width = Math.round(window.innerWidth * ratio);
+        const height = Math.round(window.innerHeight * ratio);
+        if (canvas.width !== width || canvas.height !== height) {
+          canvas.width = width;
+          canvas.height = height;
+          context.imageSmoothingEnabled = true;
+          context.imageSmoothingQuality = "high";
+          canvasDirty = true;
+        }
+        updateTargetProgress();
+      }
+
+      function frameUrl(globalIndex) {
+        const segment = Math.floor(globalIndex / FRAMES_PER_SEGMENT) + 1;
+        const frame = (globalIndex % FRAMES_PER_SEGMENT) + 1;
+        return `${FRAME_ROOT}/${String(segment).padStart(2, "0")}/frame_${String(frame).padStart(3, "0")}.webp`;
+      }
+
+      async function fetchFrameBlob(globalIndex) {
+        if (pendingDownloads.has(globalIndex)) return pendingDownloads.get(globalIndex);
+
+        const request = (async () => {
+          const response = await fetch(frameUrl(globalIndex), { cache: "force-cache" });
+          if (!response.ok) throw new Error(`Frame ${globalIndex + 1} failed with ${response.status}`);
+          const blob = await response.blob();
+          warmedFrames.add(globalIndex);
+          return blob;
+        })();
+
+        pendingDownloads.set(globalIndex, request);
+        try {
+          return await request;
+        } finally {
+          pendingDownloads.delete(globalIndex);
+        }
+      }
+
+      function trimFrameCache() {
+        while (frameCache.size > MAX_DECODED_FRAMES) {
+          let victim = -1;
+          let greatestDistance = -1;
+          frameCache.forEach((bitmap, globalIndex) => {
+            const distance = Math.abs(globalIndex - targetGlobalFrame);
+            if (globalIndex !== targetGlobalFrame && distance > greatestDistance) {
+              victim = globalIndex;
+              greatestDistance = distance;
+            }
+          });
+
+          if (victim < 0) break;
+          frameCache.get(victim)?.close?.();
+          frameCache.delete(victim);
+        }
+        document.documentElement.dataset.decodedFrames = String(frameCache.size);
+      }
+
+      async function loadFrame(globalIndex) {
+        if (globalIndex < 0 || globalIndex >= TOTAL_FRAMES) return null;
+        if (frameCache.has(globalIndex)) return frameCache.get(globalIndex);
+        if (pendingFrames.has(globalIndex)) return pendingFrames.get(globalIndex);
+
+        const request = (async () => {
+          let bitmap;
+          if (window.location.protocol === "file:") {
+            const image = new Image();
+            image.decoding = "async";
+            image.src = frameUrl(globalIndex);
+            await image.decode();
+            bitmap = await createImageBitmap(image);
+            warmedFrames.add(globalIndex);
+          } else {
+            const blob = await fetchFrameBlob(globalIndex);
+            bitmap = await createImageBitmap(blob);
+          }
+          frameCache.set(globalIndex, bitmap);
+          trimFrameCache();
+          canvasDirty = true;
+          return bitmap;
+        })();
+
+        pendingFrames.set(globalIndex, request);
+        try {
+          return await request;
+        } finally {
+          pendingFrames.delete(globalIndex);
+        }
+      }
+
+      function pumpLoadQueue() {
+        while (activeLoads < MAX_CONCURRENT_DECODES && loadQueue.length) {
+          const globalIndex = loadQueue.shift();
+          queuedFrames.delete(globalIndex);
+          if (frameCache.has(globalIndex) || pendingFrames.has(globalIndex)) continue;
+
+          activeLoads += 1;
+          loadFrame(globalIndex)
+            .catch(error => console.warn(error))
+            .finally(() => {
+              activeLoads -= 1;
+              pumpLoadQueue();
+            });
+        }
+      }
+
+      function queueFrame(globalIndex) {
+        if (
+          globalIndex < 0 ||
+          globalIndex >= TOTAL_FRAMES ||
+          frameCache.has(globalIndex) ||
+          pendingFrames.has(globalIndex) ||
+          queuedFrames.has(globalIndex)
+        ) return;
+
+        queuedFrames.add(globalIndex);
+        loadQueue.push(globalIndex);
+      }
+
+      function preloadAround(globalIndex) {
+        if (Math.abs(globalIndex - lastPrefetchCenter) < 2) return;
+        lastPrefetchCenter = globalIndex;
+        loadQueue.length = 0;
+        queuedFrames.clear();
+
+        queueFrame(globalIndex);
+        for (let offset = 1; offset <= CACHE_RADIUS; offset += 1) {
+          queueFrame(globalIndex + offset);
+          queueFrame(globalIndex - offset);
+        }
+        pumpLoadQueue();
+      }
+
+      function nearestLoadedFrame(globalIndex) {
+        if (frameCache.has(globalIndex)) return { bitmap: frameCache.get(globalIndex), index: globalIndex };
+        for (let offset = 1; offset <= CACHE_RADIUS; offset += 1) {
+          if (frameCache.has(globalIndex - offset)) {
+            return { bitmap: frameCache.get(globalIndex - offset), index: globalIndex - offset };
+          }
+          if (frameCache.has(globalIndex + offset)) {
+            return { bitmap: frameCache.get(globalIndex + offset), index: globalIndex + offset };
+          }
+        }
+        return null;
+      }
+
+      async function warmCompressedFrames() {
+        let cursor = 0;
+        const worker = async () => {
+          while (cursor < TOTAL_FRAMES) {
+            if (activeLoads > 0) {
+              await new Promise(resolve => setTimeout(resolve, 120));
+              continue;
+            }
+
+            const globalIndex = cursor;
+            cursor += 1;
+            if (warmedFrames.has(globalIndex)) continue;
+            try {
+              await fetchFrameBlob(globalIndex);
+            } catch (error) {
+              console.warn(error);
+            }
+            document.documentElement.dataset.warmedFrames = String(warmedFrames.size);
+          }
+        };
+
+        await Promise.all([worker(), worker()]);
+      }
+
+      function drawBitmapCover(bitmap, alpha = 1) {
+        const targetWidth = canvas.width;
+        const targetHeight = canvas.height;
+        const sourceRatio = bitmap.width / bitmap.height;
+        const targetRatio = targetWidth / targetHeight;
+        let sourceX = 0;
+        let sourceY = 0;
+        let sourceWidth = bitmap.width;
+        let sourceHeight = bitmap.height;
+
+        if (sourceRatio > targetRatio) {
+          sourceWidth = bitmap.height * targetRatio;
+          sourceX = (bitmap.width - sourceWidth) * 0.5;
+        } else {
+          sourceHeight = bitmap.width / targetRatio;
+          sourceY = (bitmap.height - sourceHeight) * 0.5;
+        }
+
+        context.globalAlpha = alpha;
+        context.drawImage(bitmap, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, targetWidth, targetHeight);
+        context.globalAlpha = 1;
+      }
+
+      function drawVideoFrame(progress) {
+        const scaled = clamp(progress) * SEGMENT_COUNT;
+        const segmentIndex = Math.min(SEGMENT_COUNT - 1, Math.floor(scaled));
+        const localProgress = segmentIndex === SEGMENT_COUNT - 1 && progress === 1 ? 1 : scaled - segmentIndex;
+        const localFrame = Math.min(FRAMES_PER_SEGMENT - 1, Math.round(localProgress * (FRAMES_PER_SEGMENT - 1)));
+        const globalIndex = segmentIndex * FRAMES_PER_SEGMENT + localFrame;
+        const nextGlobalIndex = segmentIndex < SEGMENT_COUNT - 1 ? (segmentIndex + 1) * FRAMES_PER_SEGMENT : -1;
+
+        targetGlobalFrame = globalIndex;
+        document.documentElement.dataset.currentFrame = String(globalIndex + 1);
+        preloadAround(globalIndex);
+
+        const primary = nearestLoadedFrame(globalIndex);
+        const next = nextGlobalIndex >= 0 && frameCache.has(nextGlobalIndex)
+          ? { bitmap: frameCache.get(nextGlobalIndex), index: nextGlobalIndex }
+          : null;
+        const crossfade = next ? smoothstep(0.9, 1, localProgress) : 0;
+        const frameKey = `${segmentIndex}:${primary?.index ?? -1}:${next?.index ?? -1}:${Math.round(crossfade * 20)}:${canvas.width}x${canvas.height}`;
+
+        if (!canvasDirty && frameKey === lastFrameKey) return;
+        lastFrameKey = frameKey;
+        canvasDirty = false;
+        context.fillStyle = "#000";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+
+        if (primary) drawBitmapCover(primary.bitmap, 1);
+        if (next && crossfade > 0) drawBitmapCover(next.bitmap, crossfade);
+      }
+
+      function setVisual(element, opacity, translateX, translateY, blur, scale = 1) {
+        element.style.opacity = opacity.toFixed(4);
+        element.style.transform = `translate3d(${translateX.toFixed(2)}px, ${translateY.toFixed(2)}px, 0) scale(${scale.toFixed(4)})`;
+        element.style.filter = `blur(${blur.toFixed(2)}px)`;
+      }
+
+      function scrollToProgress(progress) {
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        window.scrollTo({ top: maxScroll * progress, behavior: "smooth" });
+      }
+
+      function setPreviewPlayback(isActive, activeVideo = null) {
+        const shouldPlay = isActive && !filmTheater.classList.contains("is-open");
+        const targetPreview = shouldPlay ? activeVideo || previewVideos[0] || null : null;
+        if (previewsAreActive === shouldPlay && activePreviewVideo === targetPreview) return;
+        previewsAreActive = shouldPlay;
+        activePreviewVideo = targetPreview;
+
+        previewVideos.forEach(video => {
+          const shouldPreview = video === targetPreview;
+          if (shouldPreview) {
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      }
+
+      function openTheater(button) {
+        theaterReturnFocus = button;
+        theaterIndex.textContent = `${button.dataset.filmIndex} / 06`;
+        theaterTitle.textContent = button.dataset.filmTitle;
+        theaterVideo.src = button.dataset.film;
+        filmTheater.classList.add("is-open");
+        filmTheater.setAttribute("aria-hidden", "false");
+        document.body.classList.add("is-theater-open");
+        setPreviewPlayback(false);
+        theaterClose.focus();
+        theaterVideo.play().catch(() => {});
+      }
+
+      function closeTheater() {
+        if (!filmTheater.classList.contains("is-open")) return;
+        theaterVideo.pause();
+        theaterVideo.removeAttribute("src");
+        theaterVideo.load();
+        filmTheater.classList.remove("is-open");
+        filmTheater.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("is-theater-open");
+        theaterReturnFocus?.focus();
+        theaterReturnFocus = null;
+        previewsAreActive = false;
+        activePreviewVideo = null;
+      }
+
+      function openImageLightbox(button) {
+        lightboxReturnFocus = button;
+        lightboxImage.src = button.dataset.image;
+        lightboxImage.alt = button.dataset.imageTitle;
+        lightboxIndex.textContent = button.dataset.imageIndex;
+        imageLightbox.classList.add("is-open");
+        imageLightbox.setAttribute("aria-hidden", "false");
+        document.body.classList.add("is-lightbox-open");
+        lightboxClose.focus();
+      }
+
+      function closeImageLightbox() {
+        if (!imageLightbox.classList.contains("is-open")) return;
+        imageLightbox.classList.remove("is-open");
+        imageLightbox.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("is-lightbox-open");
+        lightboxImage.removeAttribute("src");
+        lightboxImage.alt = "";
+        lightboxReturnFocus?.focus();
+        lightboxReturnFocus = null;
+      }
+
+      function animateInterface(progress) {
+        const heroExit = smoothstep(0.055, 0.205, progress);
+        setVisual(heroCard, 1 - heroExit, mix(0, -58, heroExit), mix(0, 24, heroExit), mix(0, 16, heroExit), mix(1, 0.965, heroExit));
+        heroCard.style.pointerEvents = heroExit > 0.92 ? "none" : "auto";
+
+        const brandExit = smoothstep(0.075, 0.225, progress);
+        setVisual(brand, 1 - brandExit, mix(0, -26, brandExit), 0, mix(0, 12, brandExit), mix(1, 0.96, brandExit));
+
+        const featureIn = smoothstep(0.145, 0.245, progress);
+        const featureOut = smoothstep(0.365, 0.465, progress);
+        const featureOpacity = featureIn * (1 - featureOut);
+        featureSection.style.pointerEvents = featureOpacity > 0.72 ? "auto" : "none";
+
+        featureCards.forEach((card, index) => {
+          const delay = index * 0.012;
+          const cardIn = smoothstep(0.145 + delay, 0.245 + delay, progress);
+          const cardOut = smoothstep(0.365 + delay * 0.45, 0.465 + delay * 0.45, progress);
+          const opacity = cardIn * (1 - cardOut);
+          const direction = index === 0 ? -1 : index === 2 ? 1 : 0;
+          const translateX = mix(direction * 58, 0, cardIn) + mix(0, direction * -34, cardOut);
+          const translateY = mix(80 + index * 12, 0, cardIn) + mix(0, -45, cardOut);
+          const blur = mix(18, 0, cardIn) + mix(0, 16, cardOut);
+          setVisual(card, opacity, translateX, translateY, blur, mix(0.94, 1, cardIn) - cardOut * 0.025);
+        });
+
+        const pageWindows = {
+          aigc: [0.485, 0.545, 0.62, 0.66],
+          modeling: [0.805, 0.865, 0.945, 1]
+        };
+
+        categoryBoards.forEach(board => {
+          const [inStart, inEnd, outStart, outEnd] = pageWindows[board.dataset.page] || [1, 1, 1, 1];
+          const enter = smoothstep(inStart, inEnd, progress);
+          const exit = smoothstep(outStart, outEnd, progress);
+          const opacity = enter * (1 - exit);
+          const translateY = mix(76, 0, enter) + mix(0, -54, exit);
+          const blur = mix(18, 0, enter) + mix(0, 16, exit);
+          setVisual(board, opacity, mix(36, 0, enter), translateY, blur, mix(0.97, 1, enter) - exit * 0.018);
+          board.style.pointerEvents = opacity > 0.66 ? "auto" : "none";
+          board.setAttribute("aria-hidden", opacity > 0.4 ? "false" : "true");
+        });
+
+        const workIn = smoothstep(0.65, 0.705, progress);
+        const workOut = smoothstep(0.765, 0.835, progress);
+        const workOpacity = workIn * (1 - workOut);
+        setVisual(workBoard, workOpacity, mix(54, 0, workIn) + mix(0, -34, workOut), mix(56, 0, workIn) + mix(0, -44, workOut), mix(14, 0, workIn) + mix(0, 14, workOut), mix(0.97, 1, workIn) - workOut * 0.018);
+        workBoard.style.pointerEvents = workOpacity > 0.62 ? "auto" : "none";
+        workBoard.setAttribute("aria-hidden", workOpacity > 0.4 ? "false" : "true");
+        setPreviewPlayback(workOpacity > 0.7);
+      }
+
+      function animationLoop() {
+        currentProgress += (targetProgress - currentProgress) * 0.08;
+        if (Math.abs(targetProgress - currentProgress) < 0.00001) currentProgress = targetProgress;
+        if (ready) drawVideoFrame(currentProgress);
+        animateInterface(currentProgress);
+        requestAnimationFrame(animationLoop);
+      }
+
+      async function initializeExperience() {
+        try {
+          await loadFrame(0);
+          ready = true;
+          loadingProgress.textContent = "EXPERIENCE READY";
+          drawVideoFrame(currentProgress);
+          requestAnimationFrame(() => loadingLayer.classList.add("is-hidden"));
+          if (window.location.protocol !== "file:") {
+            setTimeout(() => warmCompressedFrames(), 1600);
+          }
+        } catch (error) {
+          console.error(error);
+          loadingLayer.classList.add("is-hidden");
+          errorLayer.classList.add("is-visible");
+        }
+      }
+
+      featureJump.addEventListener("click", () => {
+        scrollToProgress(0.32);
+      });
+
+      featureCards.forEach(card => {
+        card.addEventListener("click", event => {
+          event.preventDefault();
+          const target = PAGE_TARGETS[card.dataset.target];
+          if (target === undefined) return;
+          history.replaceState(null, "", card.getAttribute("href"));
+          scrollToProgress(target);
+        });
+      });
+
+      filmButtons.forEach(button => {
+        button.addEventListener("click", () => openTheater(button));
+        button.addEventListener("mouseenter", () => {
+          const preview = button.querySelector(".work-preview");
+          if (preview && workBoard.style.pointerEvents !== "none") setPreviewPlayback(true, preview);
+        });
+        button.addEventListener("mouseleave", () => {
+          if (workBoard.style.pointerEvents !== "none") setPreviewPlayback(true);
+        });
+      });
+
+      imageButtons.forEach(button => {
+        button.addEventListener("click", () => openImageLightbox(button));
+      });
+
+      theaterClose.addEventListener("click", closeTheater);
+      filmTheater.addEventListener("click", event => {
+        if (event.target === filmTheater) closeTheater();
+      });
+      lightboxClose.addEventListener("click", closeImageLightbox);
+      imageLightbox.addEventListener("click", event => {
+        if (event.target === imageLightbox) closeImageLightbox();
+      });
+      window.addEventListener("keydown", event => {
+        if (event.key === "Escape") {
+          closeImageLightbox();
+          closeTheater();
+        }
+      });
+
+      window.addEventListener("scroll", updateTargetProgress, { passive: true });
+      window.addEventListener("resize", resizeCanvas, { passive: true });
+      window.addEventListener("beforeunload", () => {
+        frameCache.forEach(frame => frame.close?.());
+        frameCache.clear();
+      });
+
+      resizeCanvas();
+      updateTargetProgress();
+      animateInterface(0);
+      requestAnimationFrame(animationLoop);
+      initializeExperience();
+    })();
+  </script>
+</body>
+</html>
