@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#000000">
+  <link rel="preload" as="image" href="frames/01/frame_001.webp" fetchpriority="high">
   <title>郑浩然 — 个人作品集</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -73,22 +74,45 @@
       z-index: 0;
       inset: 0;
       overflow: hidden;
-      background: #000;
+      background: #0b080b;
       isolation: isolate;
     }
 
-    #frame-canvas {
+    .frame-fallback {
       position: absolute;
       z-index: 0;
       inset: 0;
       width: 100%;
       height: 100%;
-      background: #000;
+      object-fit: cover;
+      opacity: 1;
+      transform: scale(1.015);
+      filter: saturate(0.94) contrast(1.04);
+      transition: opacity 700ms ease;
+    }
+
+    html.is-frame-ready .frame-fallback {
+      opacity: 1;
+    }
+
+    #frame-canvas {
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      background: #0b080b url("frames/01/frame_001.webp") center / cover no-repeat;
+      opacity: 0;
+      transition: opacity 700ms ease;
+    }
+
+    html.is-frame-ready #frame-canvas {
+      opacity: 1;
     }
 
     .cinematic-shade {
       position: absolute;
-      z-index: 1;
+      z-index: 2;
       inset: 0;
       display: none;
       pointer-events: none;
@@ -972,8 +996,10 @@
       z-index: 100;
       inset: 0;
       display: grid;
-      place-items: center;
-      background: #000;
+      place-items: end start;
+      padding: 28px;
+      background: transparent;
+      pointer-events: none;
       transition: opacity 600ms ease, visibility 600ms ease;
     }
 
@@ -988,13 +1014,19 @@
       display: flex;
       align-items: center;
       flex-direction: column;
+      padding: 14px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.42);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.28);
+      backdrop-filter: blur(18px);
       text-align: center;
     }
 
     .spinner {
-      width: 42px;
-      height: 42px;
-      margin-bottom: 22px;
+      width: 24px;
+      height: 24px;
+      margin-bottom: 12px;
       border: 2px solid rgba(255, 255, 255, 0.22);
       border-top-color: #fff;
       border-radius: 50%;
@@ -1468,6 +1500,7 @@
 </head>
 <body>
   <main class="stage" aria-label="郑浩然个人作品集">
+    <img class="frame-fallback" src="frames/01/frame_001.webp" alt="" aria-hidden="true" fetchpriority="high">
     <canvas id="frame-canvas" aria-hidden="true"></canvas>
     <div class="cinematic-shade" aria-hidden="true"></div>
 
@@ -1720,7 +1753,10 @@
       const FRAME_ROOT = IS_DESKTOP ? "frames-desktop" : "frames";
       const CACHE_RADIUS = IS_DESKTOP ? 8 : 18;
       const MAX_DECODED_FRAMES = IS_DESKTOP ? 16 : 48;
-      const MAX_CONCURRENT_DECODES = 6;
+      const MAX_CONCURRENT_DECODES = IS_DESKTOP ? 3 : 4;
+      const MAX_PROGRESS_FRAMES_PER_TICK = IS_DESKTOP ? 8 : 12;
+      const FAST_SCROLL_FRAME_JUMP = IS_DESKTOP ? 18 : 28;
+      const FAST_SCROLL_SETTLE_MS = 180;
       const canvas = document.getElementById("frame-canvas");
       const context = canvas.getContext("2d", { alpha: false, desynchronized: true });
       const loadingLayer = document.getElementById("loading-layer");
@@ -1757,12 +1793,16 @@
 
       let targetProgress = 0;
       let currentProgress = 0;
+      let interfaceProgress = 0;
       let canvasDirty = true;
       let lastFrameKey = "";
+      let lastDrawnFrame = null;
       let ready = false;
       let activeLoads = 0;
       let targetGlobalFrame = 0;
       let lastPrefetchCenter = -1;
+      let lastTargetFrame = 0;
+      let fastScrollUntil = 0;
       let previewsAreActive = false;
       let activePreviewVideo = null;
       let theaterReturnFocus = null;
@@ -1780,9 +1820,36 @@
         return x * x * (3 - 2 * x);
       };
 
+      function advanceProgress(current, target) {
+        const delta = target - current;
+        if (Math.abs(delta) < 0.00001) return target;
+
+        const maxStep = MAX_PROGRESS_FRAMES_PER_TICK / Math.max(1, TOTAL_FRAMES - 1);
+        const easedStep = delta * 0.14;
+        const step = clamp(easedStep, -maxStep, maxStep);
+        return Math.abs(delta) <= Math.abs(step) ? target : current + step;
+      }
+
+      function frameIndexForProgress(progress) {
+        const scaled = clamp(progress) * SEGMENT_COUNT;
+        const segmentIndex = Math.min(SEGMENT_COUNT - 1, Math.floor(scaled));
+        const localProgress = segmentIndex === SEGMENT_COUNT - 1 && progress === 1 ? 1 : scaled - segmentIndex;
+        const localFrame = Math.min(FRAMES_PER_SEGMENT - 1, Math.round(localProgress * (FRAMES_PER_SEGMENT - 1)));
+        return segmentIndex * FRAMES_PER_SEGMENT + localFrame;
+      }
+
       function updateTargetProgress() {
         const scrollable = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
-        targetProgress = clamp(window.scrollY / scrollable);
+        const nextProgress = clamp(window.scrollY / scrollable);
+        const nextTargetFrame = frameIndexForProgress(nextProgress);
+        targetProgress = nextProgress;
+
+        if (Math.abs(nextTargetFrame - lastTargetFrame) > FAST_SCROLL_FRAME_JUMP) {
+          fastScrollUntil = performance.now() + FAST_SCROLL_SETTLE_MS;
+          loadQueue.length = 0;
+          queuedFrames.clear();
+        }
+        lastTargetFrame = nextTargetFrame;
       }
 
       function resizeCanvas() {
@@ -1830,7 +1897,7 @@
           let greatestDistance = -1;
           frameCache.forEach((bitmap, globalIndex) => {
             const distance = Math.abs(globalIndex - targetGlobalFrame);
-            if (globalIndex !== targetGlobalFrame && distance > greatestDistance) {
+            if (globalIndex !== targetGlobalFrame && globalIndex !== lastDrawnFrame?.index && distance > greatestDistance) {
               victim = globalIndex;
               greatestDistance = distance;
             }
@@ -1931,30 +1998,6 @@
         return null;
       }
 
-      async function warmCompressedFrames() {
-        let cursor = 0;
-        const worker = async () => {
-          while (cursor < TOTAL_FRAMES) {
-            if (activeLoads > 0) {
-              await new Promise(resolve => setTimeout(resolve, 120));
-              continue;
-            }
-
-            const globalIndex = cursor;
-            cursor += 1;
-            if (warmedFrames.has(globalIndex)) continue;
-            try {
-              await fetchFrameBlob(globalIndex);
-            } catch (error) {
-              console.warn(error);
-            }
-            document.documentElement.dataset.warmedFrames = String(warmedFrames.size);
-          }
-        };
-
-        await Promise.all([worker(), worker()]);
-      }
-
       function drawBitmapCover(bitmap, alpha = 1) {
         const targetWidth = canvas.width;
         const targetHeight = canvas.height;
@@ -1985,25 +2028,30 @@
         const localFrame = Math.min(FRAMES_PER_SEGMENT - 1, Math.round(localProgress * (FRAMES_PER_SEGMENT - 1)));
         const globalIndex = segmentIndex * FRAMES_PER_SEGMENT + localFrame;
         const nextGlobalIndex = segmentIndex < SEGMENT_COUNT - 1 ? (segmentIndex + 1) * FRAMES_PER_SEGMENT : -1;
+        const isFastScrolling = performance.now() < fastScrollUntil;
 
         targetGlobalFrame = globalIndex;
         document.documentElement.dataset.currentFrame = String(globalIndex + 1);
-        preloadAround(globalIndex);
+        if (!isFastScrolling) preloadAround(globalIndex);
 
-        const primary = nearestLoadedFrame(globalIndex);
+        const nearestPrimary = nearestLoadedFrame(globalIndex);
+        const primary = nearestPrimary || lastDrawnFrame;
         const next = nextGlobalIndex >= 0 && frameCache.has(nextGlobalIndex)
           ? { bitmap: frameCache.get(nextGlobalIndex), index: nextGlobalIndex }
           : null;
         const crossfade = next ? smoothstep(0.9, 1, localProgress) : 0;
-        const frameKey = `${segmentIndex}:${primary?.index ?? -1}:${next?.index ?? -1}:${Math.round(crossfade * 20)}:${canvas.width}x${canvas.height}`;
+        const holdIndex = nearestPrimary ? -1 : primary?.index ?? -1;
+        const frameKey = `${segmentIndex}:${globalIndex}:${primary?.index ?? -1}:${holdIndex}:${next?.index ?? -1}:${Math.round(crossfade * 20)}:${canvas.width}x${canvas.height}`;
 
+        if (!primary) return;
         if (!canvasDirty && frameKey === lastFrameKey) return;
         lastFrameKey = frameKey;
         canvasDirty = false;
         context.fillStyle = "#000";
         context.fillRect(0, 0, canvas.width, canvas.height);
 
-        if (primary) drawBitmapCover(primary.bitmap, 1);
+        drawBitmapCover(primary.bitmap, 1);
+        lastDrawnFrame = primary;
         if (next && crossfade > 0) drawBitmapCover(next.bitmap, crossfade);
       }
 
@@ -2136,10 +2184,11 @@
       }
 
       function animationLoop() {
-        currentProgress += (targetProgress - currentProgress) * 0.08;
-        if (Math.abs(targetProgress - currentProgress) < 0.00001) currentProgress = targetProgress;
+        interfaceProgress += (targetProgress - interfaceProgress) * 0.22;
+        if (Math.abs(targetProgress - interfaceProgress) < 0.00001) interfaceProgress = targetProgress;
+        currentProgress = advanceProgress(currentProgress, targetProgress);
         if (ready) drawVideoFrame(currentProgress);
-        animateInterface(currentProgress);
+        animateInterface(interfaceProgress);
         requestAnimationFrame(animationLoop);
       }
 
@@ -2149,10 +2198,8 @@
           ready = true;
           loadingProgress.textContent = "EXPERIENCE READY";
           drawVideoFrame(currentProgress);
+          document.documentElement.classList.add("is-frame-ready");
           requestAnimationFrame(() => loadingLayer.classList.add("is-hidden"));
-          if (window.location.protocol !== "file:") {
-            setTimeout(() => warmCompressedFrames(), 1600);
-          }
         } catch (error) {
           console.error(error);
           loadingLayer.classList.add("is-hidden");
