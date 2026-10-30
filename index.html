@@ -142,7 +142,7 @@
       align-items: center;
       gap: 12px;
       transform-origin: left center;
-      will-change: opacity, transform, filter;
+      will-change: opacity, transform;
     }
 
     .brand-mark {
@@ -182,7 +182,7 @@
       -webkit-backdrop-filter: blur(80px);
       backdrop-filter: blur(80px);
       pointer-events: auto;
-      will-change: opacity, transform, filter;
+      will-change: opacity, transform;
     }
 
     .hero-card::before,
@@ -290,7 +290,7 @@
       -webkit-backdrop-filter: blur(80px);
       backdrop-filter: blur(80px);
       cursor: pointer;
-      will-change: opacity, transform, filter;
+      will-change: opacity, transform;
       transition: border-color 220ms ease, background-color 220ms ease, box-shadow 220ms ease;
     }
 
@@ -384,7 +384,7 @@
 
     .category-board {
       max-width: min(920px, 92vw);
-      will-change: opacity, transform, filter;
+      will-change: opacity, transform;
     }
 
     .category-kicker {
@@ -605,7 +605,10 @@
       height: min(78vh, 760px);
       min-height: 0;
       grid-template-columns: repeat(5, minmax(0, 1fr));
-      grid-template-rows: repeat(4, minmax(0, 1fr));
+      grid-template-rows: none;
+      grid-auto-rows: calc((min(78vh, 760px) - 3 * clamp(5px, 0.45vw, 8px)) / 4);
+      overflow-y: auto;
+      scrollbar-width: thin;
       gap: clamp(5px, 0.45vw, 8px);
       align-items: stretch;
       grid-auto-flow: dense;
@@ -774,7 +777,7 @@
       display: grid;
       padding: 94px clamp(28px, 4vw, 72px) 42px;
       place-items: center;
-      will-change: opacity, transform, filter;
+      will-change: opacity, transform;
     }
 
     .work-grid {
@@ -1191,7 +1194,9 @@
         overflow-x: hidden;
         overflow-y: auto;
         grid-template-columns: 1fr;
-        grid-template-rows: auto auto;
+        grid-template-rows: none;
+        grid-auto-rows: max-content;
+        align-content: start;
         gap: 12px;
         padding-right: 4px;
         scrollbar-width: thin;
@@ -1585,37 +1590,37 @@
         </div>
         <div class="aigc-gallery" aria-label="AIGC 图片作品">
           <button class="aigc-shot aigc-shot--wide" type="button" data-image="media/aigc/aigc-01.png" data-image-index="01 / 07" data-image-title="AIGC 提示词文档" aria-label="放大查看 AIGC 提示词文档">
-            <img src="media/aigc/aigc-01.png" alt="AIGC 提示词文档" loading="lazy">
+            <img src="media/aigc/aigc-01.png" alt="AIGC 提示词文档" loading="lazy" decoding="async">
             <span class="aigc-index">01 / 07</span>
             <span class="aigc-meta"><span class="aigc-title">提示词文档</span><span class="aigc-action">VIEW IMAGE</span></span>
           </button>
           <button class="aigc-shot" type="button" data-image="media/aigc/aigc-02.png" data-image-index="02 / 07" data-image-title="AIGC 室内空间" aria-label="放大查看 AIGC 室内空间">
-            <img src="media/aigc/aigc-02.png" alt="AIGC 室内空间" loading="lazy">
+            <img src="media/aigc/aigc-02.png" alt="AIGC 室内空间" loading="lazy" decoding="async">
             <span class="aigc-index">02 / 07</span>
             <span class="aigc-meta"><span class="aigc-title">室内空间</span><span class="aigc-action">VIEW IMAGE</span></span>
           </button>
           <button class="aigc-shot" type="button" data-image="media/aigc/aigc-03.png" data-image-index="03 / 07" data-image-title="AIGC 雨街场景" aria-label="放大查看 AIGC 雨街场景">
-            <img src="media/aigc/aigc-03.png" alt="AIGC 雨街场景" loading="lazy">
+            <img src="media/aigc/aigc-03.png" alt="AIGC 雨街场景" loading="lazy" decoding="async">
             <span class="aigc-index">03 / 07</span>
             <span class="aigc-meta"><span class="aigc-title">雨街场景</span><span class="aigc-action">VIEW IMAGE</span></span>
           </button>
           <button class="aigc-shot aigc-shot--person aigc-shot--person-right" type="button" data-image="media/aigc/aigc-04.png" data-image-index="04 / 07" data-image-title="AIGC 男士三视图" aria-label="放大查看 AIGC 男士三视图">
-            <img src="media/aigc/aigc-04.png" alt="AIGC 男士三视图" loading="lazy">
+            <img src="media/aigc/aigc-04.png" alt="AIGC 男士三视图" loading="lazy" decoding="async">
             <span class="aigc-index">04 / 07</span>
             <span class="aigc-meta"><span class="aigc-title">男士三视图</span><span class="aigc-action">VIEW IMAGE</span></span>
           </button>
           <button class="aigc-shot" type="button" data-image="media/aigc/aigc-05.png" data-image-index="05 / 07" data-image-title="AIGC 分镜版面" aria-label="放大查看 AIGC 分镜版面">
-            <img src="media/aigc/aigc-05.png" alt="AIGC 分镜版面" loading="lazy">
+            <img src="media/aigc/aigc-05.png" alt="AIGC 分镜版面" loading="lazy" decoding="async">
             <span class="aigc-index">05 / 07</span>
             <span class="aigc-meta"><span class="aigc-title">分镜版面</span><span class="aigc-action">VIEW IMAGE</span></span>
           </button>
           <button class="aigc-shot" type="button" data-image="media/aigc/aigc-06.png" data-image-index="06 / 07" data-image-title="AIGC 人像场景" aria-label="放大查看 AIGC 人像场景">
-            <img src="media/aigc/aigc-06.png" alt="AIGC 人像场景" loading="lazy">
+            <img src="media/aigc/aigc-06.png" alt="AIGC 人像场景" loading="lazy" decoding="async">
             <span class="aigc-index">06 / 07</span>
             <span class="aigc-meta"><span class="aigc-title">人像场景</span><span class="aigc-action">VIEW IMAGE</span></span>
           </button>
           <button class="aigc-shot aigc-shot--person" type="button" data-image="media/aigc/aigc-07.png" data-image-index="07 / 07" data-image-title="AIGC 年轻女子三视图" aria-label="放大查看 AIGC 年轻女子三视图">
-            <img src="media/aigc/aigc-07.png" alt="AIGC 年轻女子三视图" loading="lazy">
+            <img src="media/aigc/aigc-07.png" alt="AIGC 年轻女子三视图" loading="lazy" decoding="async">
             <span class="aigc-index">07 / 07</span>
             <span class="aigc-meta"><span class="aigc-title">女子三视图</span><span class="aigc-action">VIEW IMAGE</span></span>
           </button>
@@ -1665,40 +1670,40 @@
     <section class="category-page" id="modeling" aria-label="3D 建模页面">
       <article class="category-board modeling-board" data-page="modeling">
         <button class="modeling-card modeling-card--lead modeling-card--portrait" type="button" data-image="media/modeling/modeling-01.jpg" data-image-index="01 / 12" data-image-title="3D 建模作品 01" aria-label="放大查看 3D 建模作品 01">
-          <img class="modeling-image" src="media/modeling/modeling-01.jpg" alt="3D 建模作品 01" loading="lazy">
+          <img class="modeling-image" src="media/modeling/modeling-01.jpg" alt="3D 建模作品 01" loading="lazy" decoding="async">
         </button>
         <button class="modeling-card modeling-card--tall modeling-card--dark" type="button" data-image="media/modeling/modeling-02.png" data-image-index="02 / 12" data-image-title="3D 建模作品 02" aria-label="放大查看 3D 建模作品 02">
-          <img class="modeling-image" src="media/modeling/modeling-02.png" alt="3D 建模作品 02" loading="lazy">
+          <img class="modeling-image" src="media/modeling/modeling-02.png" alt="3D 建模作品 02" loading="lazy" decoding="async">
         </button>
         <button class="modeling-card modeling-card--wide modeling-card--dark" type="button" data-image="media/modeling/modeling-03.png" data-image-index="03 / 12" data-image-title="3D 建模作品 03" aria-label="放大查看 3D 建模作品 03">
-          <img class="modeling-image" src="media/modeling/modeling-03.png" alt="3D 建模作品 03" loading="lazy">
+          <img class="modeling-image" src="media/modeling/modeling-03.png" alt="3D 建模作品 03" loading="lazy" decoding="async">
         </button>
         <button class="modeling-card modeling-card--wide modeling-card--dark" type="button" data-image="media/modeling/modeling-04.png" data-image-index="04 / 12" data-image-title="3D 建模作品 04" aria-label="放大查看 3D 建模作品 04">
-          <img class="modeling-image" src="media/modeling/modeling-04.png" alt="3D 建模作品 04" loading="lazy">
+          <img class="modeling-image" src="media/modeling/modeling-04.png" alt="3D 建模作品 04" loading="lazy" decoding="async">
         </button>
         <button class="modeling-card modeling-card--tall modeling-card--dark" type="button" data-image="media/modeling/modeling-05.png" data-image-index="05 / 12" data-image-title="3D 建模作品 05" aria-label="放大查看 3D 建模作品 05">
-          <img class="modeling-image" src="media/modeling/modeling-05.png" alt="3D 建模作品 05" loading="lazy">
+          <img class="modeling-image" src="media/modeling/modeling-05.png" alt="3D 建模作品 05" loading="lazy" decoding="async">
         </button>
         <button class="modeling-card modeling-card--wide" type="button" data-image="media/modeling/modeling-06.png" data-image-index="06 / 12" data-image-title="3D 建模作品 06" aria-label="放大查看 3D 建模作品 06">
-          <img class="modeling-image" src="media/modeling/modeling-06.png" alt="3D 建模作品 06" loading="lazy">
+          <img class="modeling-image" src="media/modeling/modeling-06.png" alt="3D 建模作品 06" loading="lazy" decoding="async">
         </button>
         <button class="modeling-card modeling-card--wide" type="button" data-image="media/modeling/modeling-07.jpg" data-image-index="07 / 12" data-image-title="3D 建模作品 07" aria-label="放大查看 3D 建模作品 07">
-          <img class="modeling-image" src="media/modeling/modeling-07.jpg" alt="3D 建模作品 07" loading="lazy">
+          <img class="modeling-image" src="media/modeling/modeling-07.jpg" alt="3D 建模作品 07" loading="lazy" decoding="async">
         </button>
         <button class="modeling-card" type="button" data-image="media/modeling/modeling-08.jpg" data-image-index="08 / 12" data-image-title="3D 建模作品 08" aria-label="放大查看 3D 建模作品 08">
-          <img class="modeling-image" src="media/modeling/modeling-08.jpg" alt="3D 建模作品 08" loading="lazy">
+          <img class="modeling-image" src="media/modeling/modeling-08.jpg" alt="3D 建模作品 08" loading="lazy" decoding="async">
         </button>
         <button class="modeling-card" type="button" data-image="media/modeling/modeling-09.jpg" data-image-index="09 / 12" data-image-title="3D 建模作品 09" aria-label="放大查看 3D 建模作品 09">
-          <img class="modeling-image" src="media/modeling/modeling-09.jpg" alt="3D 建模作品 09" loading="lazy">
+          <img class="modeling-image" src="media/modeling/modeling-09.jpg" alt="3D 建模作品 09" loading="lazy" decoding="async">
         </button>
         <button class="modeling-card" type="button" data-image="media/modeling/modeling-10.jpg" data-image-index="10 / 12" data-image-title="3D 建模作品 10" aria-label="放大查看 3D 建模作品 10">
-          <img class="modeling-image" src="media/modeling/modeling-10.jpg" alt="3D 建模作品 10" loading="lazy">
+          <img class="modeling-image" src="media/modeling/modeling-10.jpg" alt="3D 建模作品 10" loading="lazy" decoding="async">
         </button>
         <button class="modeling-card" type="button" data-image="media/modeling/modeling-11.png" data-image-index="11 / 12" data-image-title="3D 建模作品 11" aria-label="放大查看 3D 建模作品 11">
-          <img class="modeling-image" src="media/modeling/modeling-11.png" alt="3D 建模作品 11" loading="lazy">
+          <img class="modeling-image" src="media/modeling/modeling-11.png" alt="3D 建模作品 11" loading="lazy" decoding="async">
         </button>
         <button class="modeling-card" type="button" data-image="media/modeling/modeling-12.png" data-image-index="12 / 12" data-image-title="3D 建模作品 12" aria-label="放大查看 3D 建模作品 12">
-          <img class="modeling-image" src="media/modeling/modeling-12.png" alt="3D 建模作品 12" loading="lazy">
+          <img class="modeling-image" src="media/modeling/modeling-12.png" alt="3D 建模作品 12" loading="lazy" decoding="async">
         </button>
       </article>
     </section>
@@ -1751,12 +1756,10 @@
       const TOTAL_FRAMES = FRAMES_PER_SEGMENT * SEGMENT_COUNT;
       const IS_DESKTOP = window.matchMedia("(min-width: 768px)").matches;
       const FRAME_ROOT = IS_DESKTOP ? "frames-desktop" : "frames";
-      const CACHE_RADIUS = IS_DESKTOP ? 8 : 18;
-      const MAX_DECODED_FRAMES = IS_DESKTOP ? 16 : 48;
-      const MAX_CONCURRENT_DECODES = IS_DESKTOP ? 3 : 4;
-      const MAX_PROGRESS_FRAMES_PER_TICK = IS_DESKTOP ? 8 : 12;
-      const FAST_SCROLL_FRAME_JUMP = IS_DESKTOP ? 18 : 28;
-      const FAST_SCROLL_SETTLE_MS = 180;
+      const CACHE_RADIUS = IS_DESKTOP ? 6 : 8;
+      const MAX_DECODED_FRAMES = IS_DESKTOP ? 16 : 20;
+      const MAX_CONCURRENT_DECODES = 2;
+      const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
       const canvas = document.getElementById("frame-canvas");
       const context = canvas.getContext("2d", { alpha: false, desynchronized: true });
       const loadingLayer = document.getElementById("loading-layer");
@@ -1781,19 +1784,20 @@
       const lightboxIndex = document.getElementById("lightbox-index");
       const lightboxClose = document.getElementById("lightbox-close");
       const featureJump = document.getElementById("feature-jump");
+      const aigcVideo = document.querySelector('.aigc-video');
 
       document.documentElement.dataset.frameVariant = IS_DESKTOP ? "desktop-1920" : "mobile-840";
 
       const frameCache = new Map();
       const pendingFrames = new Map();
-      const pendingDownloads = new Map();
-      const warmedFrames = new Set();
       const queuedFrames = new Set();
       const loadQueue = [];
 
       let targetProgress = 0;
       let currentProgress = 0;
-      let interfaceProgress = 0;
+      let renderedInterfaceProgress = -1;
+      let renderRequest = 0;
+      let lastRenderTime = 0;
       let canvasDirty = true;
       let lastFrameKey = "";
       let lastDrawnFrame = null;
@@ -1801,10 +1805,11 @@
       let activeLoads = 0;
       let targetGlobalFrame = 0;
       let lastPrefetchCenter = -1;
-      let lastTargetFrame = 0;
-      let fastScrollUntil = 0;
+      let scrollDirection = 1;
       let previewsAreActive = false;
       let activePreviewVideo = null;
+      let hoveredPreviewVideo = null;
+      let workIsVisible = false;
       let theaterReturnFocus = null;
       let lightboxReturnFocus = null;
 
@@ -1812,48 +1817,34 @@
       const mix = (from, to, amount) => from + (to - from) * amount;
       const PAGE_TARGETS = {
         aigc: 0.60,
-        video: 0.69,
-        modeling: 0.86
+        video: 0.73,
+        modeling: 0.90
       };
       const smoothstep = (edge0, edge1, value) => {
         const x = clamp((value - edge0) / (edge1 - edge0));
         return x * x * (3 - 2 * x);
       };
 
-      function advanceProgress(current, target) {
+      function advanceProgress(current, target, elapsed) {
         const delta = target - current;
-        if (Math.abs(delta) < 0.00001) return target;
-
-        const maxStep = MAX_PROGRESS_FRAMES_PER_TICK / Math.max(1, TOTAL_FRAMES - 1);
-        const easedStep = delta * 0.14;
-        const step = clamp(easedStep, -maxStep, maxStep);
-        return Math.abs(delta) <= Math.abs(step) ? target : current + step;
-      }
-
-      function frameIndexForProgress(progress) {
-        const scaled = clamp(progress) * SEGMENT_COUNT;
-        const segmentIndex = Math.min(SEGMENT_COUNT - 1, Math.floor(scaled));
-        const localProgress = segmentIndex === SEGMENT_COUNT - 1 && progress === 1 ? 1 : scaled - segmentIndex;
-        const localFrame = Math.min(FRAMES_PER_SEGMENT - 1, Math.round(localProgress * (FRAMES_PER_SEGMENT - 1)));
-        return segmentIndex * FRAMES_PER_SEGMENT + localFrame;
+        if (reducedMotion.matches || Math.abs(delta) < 0.0001) return target;
+        // One clock for both the background and content, independent of display refresh rate.
+        return current + delta * (1 - Math.exp(-elapsed / 65));
       }
 
       function updateTargetProgress() {
         const scrollable = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
         const nextProgress = clamp(window.scrollY / scrollable);
-        const nextTargetFrame = frameIndexForProgress(nextProgress);
+        if (nextProgress !== targetProgress) scrollDirection = nextProgress > targetProgress ? 1 : -1;
         targetProgress = nextProgress;
-
-        if (Math.abs(nextTargetFrame - lastTargetFrame) > FAST_SCROLL_FRAME_JUMP) {
-          fastScrollUntil = performance.now() + FAST_SCROLL_SETTLE_MS;
-          loadQueue.length = 0;
-          queuedFrames.clear();
-        }
-        lastTargetFrame = nextTargetFrame;
+        requestRender();
       }
 
       function resizeCanvas() {
-        const ratio = Math.min(window.devicePixelRatio || 1, 2);
+        // Never rasterize more pixels than the source sequence can supply.
+        const ratio = Math.min(window.devicePixelRatio || 1,
+          (IS_DESKTOP ? 1920 : 840) / window.innerWidth,
+          (IS_DESKTOP ? 1080 : 472) / window.innerHeight);
         const width = Math.round(window.innerWidth * ratio);
         const height = Math.round(window.innerHeight * ratio);
         if (canvas.width !== width || canvas.height !== height) {
@@ -1870,25 +1861,6 @@
         const segment = Math.floor(globalIndex / FRAMES_PER_SEGMENT) + 1;
         const frame = (globalIndex % FRAMES_PER_SEGMENT) + 1;
         return `${FRAME_ROOT}/${String(segment).padStart(2, "0")}/frame_${String(frame).padStart(3, "0")}.webp`;
-      }
-
-      async function fetchFrameBlob(globalIndex) {
-        if (pendingDownloads.has(globalIndex)) return pendingDownloads.get(globalIndex);
-
-        const request = (async () => {
-          const response = await fetch(frameUrl(globalIndex), { cache: "force-cache" });
-          if (!response.ok) throw new Error(`Frame ${globalIndex + 1} failed with ${response.status}`);
-          const blob = await response.blob();
-          warmedFrames.add(globalIndex);
-          return blob;
-        })();
-
-        pendingDownloads.set(globalIndex, request);
-        try {
-          return await request;
-        } finally {
-          pendingDownloads.delete(globalIndex);
-        }
       }
 
       function trimFrameCache() {
@@ -1916,21 +1888,14 @@
         if (pendingFrames.has(globalIndex)) return pendingFrames.get(globalIndex);
 
         const request = (async () => {
-          let bitmap;
-          if (window.location.protocol === "file:") {
-            const image = new Image();
-            image.decoding = "async";
-            image.src = frameUrl(globalIndex);
-            await image.decode();
-            bitmap = await createImageBitmap(image);
-            warmedFrames.add(globalIndex);
-          } else {
-            const blob = await fetchFrameBlob(globalIndex);
-            bitmap = await createImageBitmap(blob);
-          }
+          // Use the browser image cache and decode once for both file:// and HTTPS.
+          const bitmap = new Image();
+          bitmap.decoding = "async";
+          bitmap.src = frameUrl(globalIndex);
+          await bitmap.decode();
           frameCache.set(globalIndex, bitmap);
           trimFrameCache();
-          canvasDirty = true;
+          requestRender();
           return bitmap;
         })();
 
@@ -1972,15 +1937,15 @@
       }
 
       function preloadAround(globalIndex) {
-        if (Math.abs(globalIndex - lastPrefetchCenter) < 2) return;
+        if (globalIndex === lastPrefetchCenter) return;
         lastPrefetchCenter = globalIndex;
         loadQueue.length = 0;
         queuedFrames.clear();
 
         queueFrame(globalIndex);
         for (let offset = 1; offset <= CACHE_RADIUS; offset += 1) {
-          queueFrame(globalIndex + offset);
-          queueFrame(globalIndex - offset);
+          queueFrame(globalIndex + offset * scrollDirection);
+          queueFrame(globalIndex - offset * scrollDirection);
         }
         pumpLoadQueue();
       }
@@ -2028,11 +1993,10 @@
         const localFrame = Math.min(FRAMES_PER_SEGMENT - 1, Math.round(localProgress * (FRAMES_PER_SEGMENT - 1)));
         const globalIndex = segmentIndex * FRAMES_PER_SEGMENT + localFrame;
         const nextGlobalIndex = segmentIndex < SEGMENT_COUNT - 1 ? (segmentIndex + 1) * FRAMES_PER_SEGMENT : -1;
-        const isFastScrolling = performance.now() < fastScrollUntil;
 
         targetGlobalFrame = globalIndex;
         document.documentElement.dataset.currentFrame = String(globalIndex + 1);
-        if (!isFastScrolling) preloadAround(globalIndex);
+        if (!reducedMotion.matches) preloadAround(globalIndex);
 
         const nearestPrimary = nearestLoadedFrame(globalIndex);
         const primary = nearestPrimary || lastDrawnFrame;
@@ -2040,35 +2004,40 @@
           ? { bitmap: frameCache.get(nextGlobalIndex), index: nextGlobalIndex }
           : null;
         const crossfade = next ? smoothstep(0.9, 1, localProgress) : 0;
-        const holdIndex = nearestPrimary ? -1 : primary?.index ?? -1;
-        const frameKey = `${segmentIndex}:${globalIndex}:${primary?.index ?? -1}:${holdIndex}:${next?.index ?? -1}:${Math.round(crossfade * 20)}:${canvas.width}x${canvas.height}`;
+        // A requested frame is not necessarily loaded. Only repaint when the actual image changes.
+        const frameKey = `${primary?.index ?? -1}:${crossfade > 0 ? next?.index : -1}:${Math.round(crossfade * 20)}`;
 
         if (!primary) return;
         if (!canvasDirty && frameKey === lastFrameKey) return;
         lastFrameKey = frameKey;
         canvasDirty = false;
-        context.fillStyle = "#000";
-        context.fillRect(0, 0, canvas.width, canvas.height);
-
         drawBitmapCover(primary.bitmap, 1);
         lastDrawnFrame = primary;
         if (next && crossfade > 0) drawBitmapCover(next.bitmap, crossfade);
       }
 
-      function setVisual(element, opacity, translateX, translateY, blur, scale = 1) {
+      function setVisual(element, opacity, translateX, translateY, scale = 1) {
+        const visible = opacity > 0.001;
+        element.style.visibility = visible ? 'visible' : 'hidden';
+        element.style.willChange = visible ? 'opacity, transform' : 'auto';
+        element.inert = !visible;
+        if (!visible) {
+          element.style.opacity = '0';
+          return;
+        }
         element.style.opacity = opacity.toFixed(4);
         element.style.transform = `translate3d(${translateX.toFixed(2)}px, ${translateY.toFixed(2)}px, 0) scale(${scale.toFixed(4)})`;
-        element.style.filter = `blur(${blur.toFixed(2)}px)`;
       }
 
       function scrollToProgress(progress) {
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-        window.scrollTo({ top: maxScroll * progress, behavior: "smooth" });
+        window.scrollTo({ top: maxScroll * progress, behavior: reducedMotion.matches ? "instant" : "smooth" });
       }
 
       function setPreviewPlayback(isActive, activeVideo = null) {
-        const shouldPlay = isActive && !filmTheater.classList.contains("is-open");
-        const targetPreview = shouldPlay ? activeVideo || previewVideos[0] || null : null;
+        const shouldPlay = isActive && !document.hidden && !reducedMotion.matches &&
+          !filmTheater.classList.contains("is-open") && !imageLightbox.classList.contains("is-open");
+        const targetPreview = shouldPlay ? activeVideo || hoveredPreviewVideo || previewVideos[0] || null : null;
         if (previewsAreActive === shouldPlay && activePreviewVideo === targetPreview) return;
         previewsAreActive = shouldPlay;
         activePreviewVideo = targetPreview;
@@ -2108,6 +2077,8 @@
         theaterReturnFocus = null;
         previewsAreActive = false;
         activePreviewVideo = null;
+        setPreviewPlayback(workIsVisible);
+        requestRender();
       }
 
       function openImageLightbox(button) {
@@ -2118,6 +2089,7 @@
         imageLightbox.classList.add("is-open");
         imageLightbox.setAttribute("aria-hidden", "false");
         document.body.classList.add("is-lightbox-open");
+        setPreviewPlayback(false);
         lightboxClose.focus();
       }
 
@@ -2130,15 +2102,17 @@
         lightboxImage.alt = "";
         lightboxReturnFocus?.focus();
         lightboxReturnFocus = null;
+        setPreviewPlayback(workIsVisible);
+        requestRender();
       }
 
       function animateInterface(progress) {
         const heroExit = smoothstep(0.055, 0.205, progress);
-        setVisual(heroCard, 1 - heroExit, mix(0, -58, heroExit), mix(0, 24, heroExit), mix(0, 16, heroExit), mix(1, 0.965, heroExit));
+        setVisual(heroCard, 1 - heroExit, mix(0, -58, heroExit), mix(0, 24, heroExit), mix(1, 0.965, heroExit));
         heroCard.style.pointerEvents = heroExit > 0.92 ? "none" : "auto";
 
         const brandExit = smoothstep(0.075, 0.225, progress);
-        setVisual(brand, 1 - brandExit, mix(0, -26, brandExit), 0, mix(0, 12, brandExit), mix(1, 0.96, brandExit));
+        setVisual(brand, 1 - brandExit, mix(0, -26, brandExit), 0, mix(1, 0.96, brandExit));
 
         const featureIn = smoothstep(0.145, 0.245, progress);
         const featureOut = smoothstep(0.365, 0.465, progress);
@@ -2153,13 +2127,12 @@
           const direction = index === 0 ? -1 : index === 2 ? 1 : 0;
           const translateX = mix(direction * 58, 0, cardIn) + mix(0, direction * -34, cardOut);
           const translateY = mix(80 + index * 12, 0, cardIn) + mix(0, -45, cardOut);
-          const blur = mix(18, 0, cardIn) + mix(0, 16, cardOut);
-          setVisual(card, opacity, translateX, translateY, blur, mix(0.94, 1, cardIn) - cardOut * 0.025);
+          setVisual(card, opacity, translateX, translateY, mix(0.94, 1, cardIn) - cardOut * 0.025);
         });
 
         const pageWindows = {
           aigc: [0.485, 0.545, 0.62, 0.66],
-          modeling: [0.805, 0.865, 0.945, 1]
+          modeling: [0.805, 0.865, 1.01, 1.02]
         };
 
         categoryBoards.forEach(board => {
@@ -2168,28 +2141,39 @@
           const exit = smoothstep(outStart, outEnd, progress);
           const opacity = enter * (1 - exit);
           const translateY = mix(76, 0, enter) + mix(0, -54, exit);
-          const blur = mix(18, 0, enter) + mix(0, 16, exit);
-          setVisual(board, opacity, mix(36, 0, enter), translateY, blur, mix(0.97, 1, enter) - exit * 0.018);
+          setVisual(board, opacity, mix(36, 0, enter), translateY, mix(0.97, 1, enter) - exit * 0.018);
           board.style.pointerEvents = opacity > 0.66 ? "auto" : "none";
           board.setAttribute("aria-hidden", opacity > 0.4 ? "false" : "true");
+          if (board.dataset.page === 'aigc' && opacity < 0.01) aigcVideo.pause();
         });
 
         const workIn = smoothstep(0.65, 0.705, progress);
         const workOut = smoothstep(0.765, 0.835, progress);
         const workOpacity = workIn * (1 - workOut);
-        setVisual(workBoard, workOpacity, mix(54, 0, workIn) + mix(0, -34, workOut), mix(56, 0, workIn) + mix(0, -44, workOut), mix(14, 0, workIn) + mix(0, 14, workOut), mix(0.97, 1, workIn) - workOut * 0.018);
+        setVisual(workBoard, workOpacity, mix(54, 0, workIn) + mix(0, -34, workOut), mix(56, 0, workIn) + mix(0, -44, workOut), mix(0.97, 1, workIn) - workOut * 0.018);
         workBoard.style.pointerEvents = workOpacity > 0.62 ? "auto" : "none";
         workBoard.setAttribute("aria-hidden", workOpacity > 0.4 ? "false" : "true");
-        setPreviewPlayback(workOpacity > 0.7);
+        workIsVisible = workOpacity > 0.7;
+        if (!workIsVisible) hoveredPreviewVideo = null;
+        setPreviewPlayback(workIsVisible);
       }
 
-      function animationLoop() {
-        interfaceProgress += (targetProgress - interfaceProgress) * 0.22;
-        if (Math.abs(targetProgress - interfaceProgress) < 0.00001) interfaceProgress = targetProgress;
-        currentProgress = advanceProgress(currentProgress, targetProgress);
-        if (ready) drawVideoFrame(currentProgress);
-        animateInterface(interfaceProgress);
-        requestAnimationFrame(animationLoop);
+      function requestRender() {
+        if (!renderRequest && !document.hidden) renderRequest = requestAnimationFrame(animationLoop);
+      }
+
+      function animationLoop(time) {
+        renderRequest = 0;
+        const elapsed = lastRenderTime ? Math.min(64, time - lastRenderTime) : 16.67;
+        lastRenderTime = time;
+        currentProgress = advanceProgress(currentProgress, targetProgress, elapsed);
+        if (ready) drawVideoFrame(reducedMotion.matches ? 0 : currentProgress);
+        if (currentProgress !== renderedInterfaceProgress) {
+          animateInterface(currentProgress);
+          renderedInterfaceProgress = currentProgress;
+        }
+        if (currentProgress !== targetProgress) requestRender();
+        else lastRenderTime = 0;
       }
 
       async function initializeExperience() {
@@ -2225,10 +2209,14 @@
         button.addEventListener("click", () => openTheater(button));
         button.addEventListener("mouseenter", () => {
           const preview = button.querySelector(".work-preview");
-          if (preview && workBoard.style.pointerEvents !== "none") setPreviewPlayback(true, preview);
+          if (preview && workIsVisible) {
+            hoveredPreviewVideo = preview;
+            setPreviewPlayback(true);
+          }
         });
         button.addEventListener("mouseleave", () => {
-          if (workBoard.style.pointerEvents !== "none") setPreviewPlayback(true);
+          hoveredPreviewVideo = null;
+          setPreviewPlayback(workIsVisible);
         });
       });
 
@@ -2253,6 +2241,24 @@
 
       window.addEventListener("scroll", updateTargetProgress, { passive: true });
       window.addEventListener("resize", resizeCanvas, { passive: true });
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          cancelAnimationFrame(renderRequest);
+          renderRequest = 0;
+          aigcVideo.pause();
+          theaterVideo.pause();
+          setPreviewPlayback(false);
+        } else {
+          lastRenderTime = 0;
+          setPreviewPlayback(workIsVisible);
+          updateTargetProgress();
+        }
+      });
+      reducedMotion.addEventListener('change', () => {
+        lastPrefetchCenter = -1;
+        setPreviewPlayback(workIsVisible);
+        requestRender();
+      });
       window.addEventListener("beforeunload", () => {
         frameCache.forEach(frame => frame.close?.());
         frameCache.clear();
@@ -2261,7 +2267,7 @@
       resizeCanvas();
       updateTargetProgress();
       animateInterface(0);
-      requestAnimationFrame(animationLoop);
+      requestRender();
       initializeExperience();
     })();
   </script>
